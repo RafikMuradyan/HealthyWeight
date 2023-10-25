@@ -16,7 +16,6 @@ export const dataSource = new DataSource({
   subscribers: [],
   entities: [
     'src/modules/**/*.entity{.ts,.js}',
-    'src/modules/**/*.view-entity{.ts,.js}',
   ],
   migrations: ['src/migrations/*{.ts,.js}'],
   synchronize: false,
