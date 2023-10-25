@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 import { Gender, WeightStatus } from './user-profile.enums';
 
 @Entity()
@@ -8,7 +8,7 @@ export class UserProfile {
 
   @Column({
     type: 'smallint',
-    unsigned: true
+    unsigned: true,
   })
   age: number;
 
@@ -27,7 +27,13 @@ export class UserProfile {
   @Column({
     type: 'enum',
     enum: WeightStatus,
-    nullable: true
+    nullable: true,
   })
   weightStatus: WeightStatus | null;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  public createdAt: Date;
 }
