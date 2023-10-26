@@ -10,7 +10,7 @@ export class AppRatings {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'tinyint', unsigned: true })
+  @Column({ type: 'smallint', unsigned: true })
   rating: number;
 
   @CreateDateColumn({
