@@ -24,6 +24,7 @@ export class AppRatingsService {
     const createdRow = await appRatingsQuery
       .insert()
       .values(appRatingData)
+      .returning('*')
       .execute();
 
     return createdRow.raw;
