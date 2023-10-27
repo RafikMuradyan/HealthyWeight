@@ -25,8 +25,9 @@ export class UserProfileService {
     const createdRow = await userProfileQuery
       .insert()
       .values(userProfileData)
+      .returning('*')
       .execute();
-
+      
     return createdRow.raw;
   }
 

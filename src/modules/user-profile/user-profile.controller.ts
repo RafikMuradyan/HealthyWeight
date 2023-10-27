@@ -32,7 +32,7 @@ export class UserProfileController {
     return createdUserProfile;
   }
 
-  @Put()
+  @Put(':id')
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeigthStatusDto,
