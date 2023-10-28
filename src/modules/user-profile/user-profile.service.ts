@@ -1,16 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from './user-profile.entity';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
-import { PutWeigthStatusDto } from './dtos/put-weight-status.dto';
+import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { IUserProfileData } from './user-profile.interfaces';
+import { CalculateIdealWeight } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.service';
+import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate.ideal-weight.interfaces';
 
 @Injectable()
 export class UserProfileService {
   constructor(
     @InjectRepository(UserProfile)
     private readonly userProfileRepository: Repository<UserProfile>,
+    private readonly calculateWeight: CalculateIdealWeight,
   ) {}
 
   async findAll(): Promise<IUserProfileData> {
@@ -20,20 +27,27 @@ export class UserProfileService {
     return { userProfiles, count };
   }
 
-  async create(userProfileData: CreateUserProfileDto): Promise<UserProfile> {
+  async create(
+    userProfileData: CreateUserProfileDto,
+  ): Promise<ICalculationResult> {
     const userProfileQuery = this.userProfileRepository.createQueryBuilder();
     const createdRow = await userProfileQuery
       .insert()
       .values(userProfileData)
       .returning('*')
       .execute();
-      
-    return createdRow.raw;
+
+    if (!createdRow.raw) {
+      throw new BadRequestException('Failed to create the user profile');
+    }
+    const calculationResult = this.calculateWeight.calculate(userProfileData);
+
+    return calculationResult;
   }
 
   async putWeightStatus(
     id: number,
-    weightStatusData: PutWeigthStatusDto,
+    weightStatusData: PutWeightStatusDto,
   ): Promise<UserProfile> {
     const userProfileQuery = this.userProfileRepository.createQueryBuilder();
     const existingProfile = await userProfileQuery

@@ -10,9 +10,10 @@ import {
 } from '@nestjs/common';
 import { UserProfileService } from './user-profile.service';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
-import { PutWeigthStatusDto } from './dtos/put-weight-status.dto';
+import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { UserProfile } from './user-profile.entity';
 import { IUserProfileData } from './user-profile.interfaces';
+import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate.ideal-weight.interfaces';
 
 @Controller('user-profile')
 export class UserProfileController {
@@ -27,7 +28,7 @@ export class UserProfileController {
   @Post()
   async create(
     @Body(new ValidationPipe()) userProfileData: CreateUserProfileDto,
-  ): Promise<UserProfile> {
+  ): Promise<ICalculationResult> {
     const createdUserProfile = this.userProfileService.create(userProfileData);
     return createdUserProfile;
   }
@@ -35,7 +36,7 @@ export class UserProfileController {
   @Put(':id')
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserProfileDto: PutWeigthStatusDto,
+    @Body() updateUserProfileDto: PutWeightStatusDto,
   ): Promise<UserProfile> {
     const updatedUserProfile = this.userProfileService.putWeightStatus(
       id,

@@ -1,14 +1,10 @@
-import {
-    IsString,
-    IsIn,
-} from 'class-validator';
-import {  WeightStatus } from '../user-profile.enums';
+import { IsString, IsIn } from 'class-validator';
+import { WeightStatus } from '../user-profile.enums';
 
-export class PutWeigthStatusDto {
-    @IsString()
-    @IsIn(
-        Object.values(WeightStatus),
-        { message: 'Weight status must be Normal, Overwaight or Underwaight' },
-    )
-    weightStatus: WeightStatus;
+export class PutWeightStatusDto {
+  @IsString()
+  @IsIn(Object.values(WeightStatus), {
+    message: 'Weight status must be Normal, Overwaight or Underwaight',
+  })
+  weightStatus: WeightStatus;
 }
