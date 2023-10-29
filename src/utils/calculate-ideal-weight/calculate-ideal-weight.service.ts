@@ -72,17 +72,47 @@ export class CalculateIdealWeight {
   }
 
   private byMiller(userProfileData: UserProfileDataDto): number {
-    // todo
-    return 1;
+    const heightMeters = userProfileData.height / 100;
+
+    const heightInches = heightMeters * 39.37;
+
+    let idealWeight = 0;
+    if (userProfileData.gender === Gender.MALE) {
+      idealWeight = 56.2 + 1.41 * (heightInches - 60);
+    } else if (userProfileData.gender === Gender.FEMALE) {
+      idealWeight = 53.1 + 1.36 * (heightInches - 60);
+    }
+
+    return Number(idealWeight.toFixed(1));
   }
 
   private byDevine(userProfileData: UserProfileDataDto): number {
-    // todo
-    return 2;
+    const heightMeters = userProfileData.height / 100;
+
+    const heightInches = heightMeters * 39.37;
+
+    let idealWeight = 0;
+    if (userProfileData.gender === Gender.MALE) {
+      idealWeight = 50 + 2.3 * (heightInches - 60);
+    } else if (userProfileData.gender === Gender.FEMALE) {
+      idealWeight = 45.5 + 2.3 * (heightInches - 60);
+    }
+
+    return Number(idealWeight.toFixed(1));
   }
 
   private byHamwi(userProfileData: UserProfileDataDto): number {
-    // todo
-    return 3;
+    const heightMeters = userProfileData.height / 100;
+
+    const heightInches = heightMeters * 39.37;
+
+    let idealWeight = 0;
+    if (userProfileData.gender === Gender.MALE) {
+      idealWeight = 48 + 2.7 * (heightInches - 60);
+    } else if (userProfileData.gender === Gender.FEMALE) {
+      idealWeight = 45.5 + 2.2 * (heightInches - 60);
+    }
+
+    return Number(idealWeight.toFixed(1));
   }
 }
