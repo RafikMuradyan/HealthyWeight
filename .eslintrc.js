@@ -31,7 +31,12 @@ module.exports = {
     'no-unused-expressions': 'error',
     'no-unused-vars': 'off',
 
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
 
     '@typescript-eslint/naming-convention': [
       'error',

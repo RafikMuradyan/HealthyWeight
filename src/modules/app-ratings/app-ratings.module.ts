@@ -9,5 +9,4 @@ import { AppRatingsController } from './app-ratings.controller';
   providers: [AppRatingsService],
   controllers: [AppRatingsController],
 })
-
-export class AppRatingsModule {};
+export class AppRatingsModule {}

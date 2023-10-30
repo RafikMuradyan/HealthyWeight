@@ -1,4 +1,4 @@
-import { AppRatings } from "./app-ratings.entity";
+import { AppRatings } from './app-ratings.entity';
 
 export interface IAppRatingsData {
   ratings: AppRatings[];
