@@ -29,26 +29,8 @@ export class CalculateIdealWeight {
   private byBMI(userProfileData: UserProfileDataDto): IBMIResult {
     const heightMeters = userProfileData.height / 100;
 
-    let minBMI = 0,
-      maxBMI = 0;
-
-    if (userProfileData.gender === Gender.MALE) {
-      if (userProfileData.age < 18) {
-        minBMI = 17.6;
-        maxBMI = 25.9;
-      } else {
-        minBMI = 20.7;
-        maxBMI = 26.4;
-      }
-    } else if (userProfileData.gender === Gender.FEMALE) {
-      if (userProfileData.age < 18) {
-        minBMI = 17.2;
-        maxBMI = 25.3;
-      } else {
-        minBMI = 19.1;
-        maxBMI = 27.0;
-      }
-    }
+    const minBMI = 18.5,
+      maxBMI = 25;
 
     const minWeight = Number((minBMI * heightMeters * heightMeters).toFixed(1));
     const maxWeight = Number((maxBMI * heightMeters * heightMeters).toFixed(1));
