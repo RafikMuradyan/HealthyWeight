@@ -5,7 +5,9 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
 async function bootstrap(): Promise<NestExpressApplication> {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
 
   app.use(helmet());
   app.use(
