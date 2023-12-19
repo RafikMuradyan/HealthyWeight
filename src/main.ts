@@ -9,6 +9,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
     cors: true,
   });
 
+  app.setGlobalPrefix('api');
   app.use(helmet());
   app.use(
     rateLimit({
