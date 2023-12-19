@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  UsePipes,
 } from '@nestjs/common';
 import { UserProfileService } from './user-profile.service';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
@@ -26,14 +27,16 @@ export class UserProfileController {
   }
 
   @Post()
+  @UsePipes(new ValidationPipe())
   async create(
-    @Body(new ValidationPipe()) userProfileData: CreateUserProfileDto,
+    @Body() userProfileData: CreateUserProfileDto,
   ): Promise<ICalculationResult> {
     const createdUserProfile = this.userProfileService.create(userProfileData);
     return createdUserProfile;
   }
 
   @Put(':id')
+  @UsePipes(new ValidationPipe())
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,
