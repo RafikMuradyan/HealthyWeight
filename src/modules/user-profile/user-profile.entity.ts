@@ -32,9 +32,8 @@ export class UserProfile {
   @Column({
     type: 'enum',
     enum: WeightStatus,
-    nullable: true,
   })
-  weightStatus: WeightStatus | null;
+  weightStatus: WeightStatus;
 
   @CreateDateColumn({
     type: 'timestamp',
