@@ -9,9 +9,9 @@ import { UserProfile } from './user-profile.entity';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
 import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
-import { CalculateIdealWeight } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.service';
-import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
-import { getWeightStatus } from 'src/utils/calculate-weight-result';
+import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.service';
+import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
+import { getWeightStatus } from '../../utils/calculate-weight-result';
 
 @Injectable()
 export class UserProfileService {
@@ -60,11 +60,11 @@ export class UserProfileService {
 
   async getAnalytics(): Promise<IUserAnalytics[]> {
     const result = await this.userProfileRepository
-    .createQueryBuilder('user')
-    .select('user.weightStatus', 'weightStatus')
-    .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count')
-    .groupBy('user.weightStatus')
-    .getRawMany();
+      .createQueryBuilder('user')
+      .select('user.weightStatus', 'weightStatus')
+      .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count')
+      .groupBy('user.weightStatus')
+      .getRawMany();
 
     return result;
   }
