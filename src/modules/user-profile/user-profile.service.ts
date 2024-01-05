@@ -12,7 +12,6 @@ import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
 import { CalculateIdealWeight } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.service';
 import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { getWeightStatus } from 'src/utils/calculate-weight-result';
-import { WeightStatus } from './user-profile.enums';
 
 @Injectable()
 export class UserProfileService {
@@ -59,9 +58,15 @@ export class UserProfileService {
     return calculationResult;
   }
 
-  // async getAnalytics(): Promise<IUserAnalytics> {
-  async getAnalytics(): Promise<any> {
-    return 'analytics';
+  async getAnalytics(): Promise<IUserAnalytics[]> {
+    const result = await this.userProfileRepository
+    .createQueryBuilder('user')
+    .select('user.weightStatus', 'weightStatus')
+    .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count')
+    .groupBy('user.weightStatus')
+    .getRawMany();
+
+    return result;
   }
 
   async putWeightStatus(

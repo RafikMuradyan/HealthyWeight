@@ -1,4 +1,5 @@
 import { UserProfile } from './user-profile.entity';
+import { WeightStatus } from './user-profile.enums';
 
 export interface IUserProfileData {
   userProfiles: UserProfile[];
@@ -6,7 +7,6 @@ export interface IUserProfileData {
 }
 
 export interface IUserAnalytics {
-  normalCount: number;
-  underweightCount: number;
-  overweightCount: number;
+  weightStatus: WeightStatus,
+  count: number,
 }
