@@ -1,5 +1,7 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
 require('dotenv').config();
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { AppRatings } from '../src/modules/app-ratings/app-ratings.entity';
+import { UserProfile } from '../src/modules/user-profile/user-profile.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -8,7 +10,7 @@ export const dataSourceOptions: DataSourceOptions = {
     rejectUnauthorized: false,
   },
   synchronize: true,
-  entities: ['dist/**/*.entity.js'],
+  entities: [AppRatings, UserProfile],
   migrations: ['dist/db/migrations/*.js'],
 };
 
