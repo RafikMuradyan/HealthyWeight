@@ -1,4 +1,4 @@
-import { WeightStatus } from 'src/modules/user-profile/user-profile.enums';
+import { WeightStatus } from '../modules/user-profile/user-profile.enums';
 
 export interface IWeightStatusData {
   actualWeight: number;
