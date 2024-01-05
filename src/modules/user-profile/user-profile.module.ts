@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserProfile } from './user-profile.entity';
 import { UserProfileService } from './user-profile.service';
 import { UserProfileController } from './user-profile.controller';
-import { IdealWeightModule } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.module';
+import { IdealWeightModule } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.module';
 
 @Module({
   imports: [IdealWeightModule, TypeOrmModule.forFeature([UserProfile])],

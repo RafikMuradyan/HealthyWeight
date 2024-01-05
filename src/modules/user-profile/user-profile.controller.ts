@@ -14,7 +14,7 @@ import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
 import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { UserProfile } from './user-profile.entity';
 import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
-import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
+import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 
 @Controller('user-profile')
 export class UserProfileController {
@@ -51,7 +51,7 @@ export class UserProfileController {
   @Get('analytics')
   async getAnalytics(): Promise<IUserAnalytics[]> {
     const analitycs = await this.userProfileService.getAnalytics();
-    
+
     return analitycs;
   }
 }
