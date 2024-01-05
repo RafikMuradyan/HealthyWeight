@@ -10,6 +10,10 @@ export class CreateUserProfileDto {
   @Min(1, { message: 'Height must be positive number' })
   height: number;
 
+  @IsInt({ message: 'Weight must be an integer' })
+  @Min(1, { message: 'Weight must be positive number' })
+  weight: number;
+
   @IsString()
   @IsIn(Object.values(Gender), { message: 'Gender must be Male or Female' })
   gender: Gender;

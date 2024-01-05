@@ -3,7 +3,7 @@ import { Gender } from 'src/modules/user-profile/user-profile.enums';
 import {
   IBMIResult,
   ICalculationResult,
-} from './calculate.ideal-weight.interfaces';
+} from './calculate-ideal-weight.interfaces';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

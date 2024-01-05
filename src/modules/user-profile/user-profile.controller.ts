@@ -13,8 +13,8 @@ import { UserProfileService } from './user-profile.service';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
 import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { UserProfile } from './user-profile.entity';
-import { IUserProfileData } from './user-profile.interfaces';
-import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate.ideal-weight.interfaces';
+import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
+import { ICalculationResult } from 'src/utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 
 @Controller('user-profile')
 export class UserProfileController {
@@ -46,5 +46,11 @@ export class UserProfileController {
       updateUserProfileDto,
     );
     return updatedUserProfile;
+  }
+
+  @Get('analytics')
+  async getAnalytics(): Promise<IUserAnalytics> {
+    const analitycs = this.userProfileService.getAnalytics();
+    return analitycs;
   }
 }
