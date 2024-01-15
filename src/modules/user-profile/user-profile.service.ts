@@ -58,16 +58,44 @@ export class UserProfileService {
     return calculationResult;
   }
 
-  async getAnalytics(): Promise<IUserAnalytics[]> {
-    const result = await this.userProfileRepository
+  async getAnalytics(): Promise<any> {
+    const baseQuery = this.userProfileRepository
     .createQueryBuilder('user')
     .select('user.weightStatus', 'weightStatus')
     .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count')
+
+    const byWeightStatus = await baseQuery
     .groupBy('user.weightStatus')
     .getRawMany();
 
-    return result;
+    const byGender = await baseQuery
+    .groupBy('user.gender')
+    .getRawMany();
+
+    const byAge = await this.userProfileRepository
+    .createQueryBuilder('user')
+    .select('CASE WHEN EXTRACT(YEAR FROM AGE(NOW(), user.birthdate)) <= 18 THEN 1 WHEN EXTRACT(YEAR FROM AGE(NOW(), user.birthdate)) <= 21 THEN 2 WHEN EXTRACT(YEAR FROM AGE(NOW(), user.birthdate)) <= 40 THEN 3 ELSE 4 END', 'ageRange')
+    .addSelect('CAST(COUNT(*) AS INTEGER)', 'count')
+    .groupBy('ageRange')
+    .getRawMany();
+
+    return {
+      byAge,
+      byGender,
+      byWeightStatus,
+    };
   }
+  
+  // async getAnalytics(): Promise<IUserAnalytics[]> {
+  //   const result = await this.userProfileRepository
+  //   .createQueryBuilder('user')
+  //   .select('user.weightStatus', 'weightStatus')
+  //   .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count')
+  //   .groupBy('user.weightStatus')
+  //   .getRawMany();
+
+  //   return result;
+  // }
 
   async putWeightStatus(
     id: number,
