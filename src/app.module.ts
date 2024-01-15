@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppRatingsModule } from './modules/app-ratings/app-ratings.module';
 import { UserProfileModule } from './modules/user-profile/user-profile.module';
-import { dataSourceOptions } from '../db/ormconfig';
+import { typeOrmConfigAsync } from '../db/ormconfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     AppRatingsModule,
     UserProfileModule,
   ],
