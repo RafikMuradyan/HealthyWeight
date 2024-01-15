@@ -74,8 +74,8 @@ export class UserProfileService {
 
     const byAge = await this.userProfileRepository
     .createQueryBuilder('user')
-    .select('CASE WHEN EXTRACT(YEAR FROM AGE(NOW(), user.birthdate)) <= 18 THEN 1 WHEN EXTRACT(YEAR FROM AGE(NOW(), user.birthdate)) <= 21 THEN 2 WHEN EXTRACT(YEAR FROM AGE(NOW(), user.birthdate)) <= 40 THEN 3 ELSE 4 END', 'ageRange')
-    .addSelect('CAST(COUNT(*) AS INTEGER)', 'count')
+    .select('CASE WHEN user.age <= 18 THEN 1 WHEN user.age <= 21 THEN 2 WHEN user.age <= 40 THEN 3 ELSE 4 END', 'ageRange')
+    .addSelect('COUNT(*)', 'count')
     .groupBy('ageRange')
     .getRawMany();
 
