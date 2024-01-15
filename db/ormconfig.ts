@@ -5,10 +5,15 @@ import { UserProfile } from '../src/modules/user-profile/user-profile.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  url: process.env.POSTGRES_URL + '?sslmode=require',
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  host: process.env.POSTGRES_HOST,
+  port: parseInt(process.env.POSTGRES_PORT, 10),
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : undefined,
   synchronize: true,
   entities: [AppRatings, UserProfile],
   migrations: ['dist/db/migrations/*.js'],

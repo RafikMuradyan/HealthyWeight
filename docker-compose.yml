@@ -2,28 +2,28 @@ version: '3'
 services:
   postgres:
     image: postgres
-    volumes: 
+    volumes:
       - postgres:/var/lib/postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: blinchik
-      POSTGRES_DB: healthy-weight
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
     ports:
-      - "5432:5432"
+      - '5432:5432'
   api:
     build:
       dockerfile: Dockerfile
       context: .
-      # Only will build development stage from our dockerfile
       target: development
     volumes:
       - .:/usr/src/app
     environment:
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: blinchik
-      DB_NAME: healthy-weight
+      PORT: ${PORT}
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USERNAME: ${POSTGRES_USERNAME}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DATABASE}
     command: npm run start:dev
     ports:
       - 3000:3000
