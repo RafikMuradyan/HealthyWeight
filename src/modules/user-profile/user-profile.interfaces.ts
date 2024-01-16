@@ -6,19 +6,24 @@ export interface IUserProfileData {
   count: number;
 }
 
+interface IBaseAnalitic {
+  count: number;
+}
+
+interface IByGender extends IBaseAnalitic {
+  gender: Gender;
+}
+
+interface IByWeightStatus extends IBaseAnalitic {
+  weightStatus: WeightStatus;
+}
+
+interface IByAge extends IBaseAnalitic {
+  age: number;
+}
+
 export interface IUserAnalytics {
-  byGender: {
-    gender: Gender;
-    count: number;
-  }[];
-
-  byWeightStatus: {
-    weightStatus: WeightStatus;
-    count: number;
-  }[];
-
-  byAge: {
-    ageRange: AgeRange;
-    count: number;
-  }[];
+  byGender: Array<IByGender>
+  byWeightStatus: Array<IByWeightStatus>
+  byAge: Array<IByAge>
 }

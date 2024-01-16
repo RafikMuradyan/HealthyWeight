@@ -79,16 +79,16 @@ export class UserProfileService {
       .select(
         "CASE \
         WHEN user.age <= 16 THEN '" +
-          AgeRange['0-16'] +
+          AgeRange.To16 +
           "' \
         WHEN user.age <= 35 THEN '" +
-          AgeRange['17-35'] +
+          AgeRange.From17To35 +
           "' \
         WHEN user.age <= 50 THEN '" +
-          AgeRange['36-50'] +
+          AgeRange.From36To50 +
           "' \
         ELSE '" +
-          AgeRange['50+'] +
+          AgeRange.From50 +
           '\' \
       END AS "ageRange"',
       )
