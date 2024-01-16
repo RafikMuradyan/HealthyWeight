@@ -1,12 +1,29 @@
 import { UserProfile } from './user-profile.entity';
-import { WeightStatus } from './user-profile.enums';
+import { Gender, WeightStatus, AgeRange } from './user-profile.enums';
 
 export interface IUserProfileData {
   userProfiles: UserProfile[];
   count: number;
 }
 
+interface IBaseAnalitic {
+  count: number;
+}
+
+interface IByGender extends IBaseAnalitic {
+  gender: Gender;
+}
+
+interface IByWeightStatus extends IBaseAnalitic {
+  weightStatus: WeightStatus;
+}
+
+interface IByAge extends IBaseAnalitic {
+  age: number;
+}
+
 export interface IUserAnalytics {
-  weightStatus: WeightStatus,
-  count: number,
+  byGender: Array<IByGender>
+  byWeightStatus: Array<IByWeightStatus>
+  byAge: Array<IByAge>
 }

@@ -12,6 +12,7 @@ import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
 import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.service';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { getWeightStatus } from '../../utils/calculate-weight-result';
+import { AgeRange } from './user-profile.enums';
 
 @Injectable()
 export class UserProfileService {
@@ -58,15 +59,48 @@ export class UserProfileService {
     return calculationResult;
   }
 
-  async getAnalytics(): Promise<IUserAnalytics[]> {
-    const result = await this.userProfileRepository
+  async getAnalytics(): Promise<IUserAnalytics> {
+    const baseWeightStatusQuery = this.userProfileRepository
       .createQueryBuilder('user')
       .select('user.weightStatus', 'weightStatus')
-      .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count')
+      .addSelect('CAST(COUNT(user.weightStatus) AS INTEGER)', 'count');
+    const byWeightStatus = await baseWeightStatusQuery
       .groupBy('user.weightStatus')
       .getRawMany();
 
-    return result;
+    const baseGenderQuery = this.userProfileRepository
+      .createQueryBuilder('user')
+      .select('user.gender', 'gender')
+      .addSelect('CAST(COUNT(user.gender) AS INTEGER)', 'count');
+    const byGender = await baseGenderQuery.groupBy('user.gender').getRawMany();
+
+    const byAge = await this.userProfileRepository
+      .createQueryBuilder('user')
+      .select(
+        "CASE \
+        WHEN user.age <= 16 THEN '" +
+          AgeRange.To16 +
+          "' \
+        WHEN user.age <= 35 THEN '" +
+          AgeRange.From17To35 +
+          "' \
+        WHEN user.age <= 50 THEN '" +
+          AgeRange.From36To50 +
+          "' \
+        ELSE '" +
+          AgeRange.From50 +
+          '\' \
+      END AS "ageRange"',
+      )
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('"ageRange"')
+      .getRawMany();
+
+    return {
+      byGender,
+      byWeightStatus,
+      byAge,
+    };
   }
 
   async putWeightStatus(
