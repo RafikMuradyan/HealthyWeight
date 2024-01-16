@@ -1,5 +1,5 @@
 import { UserProfile } from './user-profile.entity';
-import { WeightStatus } from './user-profile.enums';
+import { Gender, WeightStatus, AgeRange } from './user-profile.enums';
 
 export interface IUserProfileData {
   userProfiles: UserProfile[];
@@ -7,6 +7,18 @@ export interface IUserProfileData {
 }
 
 export interface IUserAnalytics {
-  weightStatus: WeightStatus,
-  count: number,
+  byGender: {
+    gender: Gender;
+    count: number;
+  }[];
+
+  byWeightStatus: {
+    weightStatus: WeightStatus;
+    count: number;
+  }[];
+
+  byAge: {
+    ageRange: AgeRange;
+    count: number;
+  }[];
 }

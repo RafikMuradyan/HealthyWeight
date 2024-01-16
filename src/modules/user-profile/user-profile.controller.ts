@@ -49,7 +49,7 @@ export class UserProfileController {
   }
 
   @Get('analytics')
-  async getAnalytics(): Promise<IUserAnalytics[]> {
+  async getAnalytics(): Promise<IUserAnalytics> {
     const analitycs = await this.userProfileService.getAnalytics();
 
     return analitycs;
