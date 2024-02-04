@@ -1,35 +1,23 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import {
-  TypeOrmModuleAsyncOptions,
-  TypeOrmModuleOptions,
-} from '@nestjs/typeorm';
+require('dotenv').config();
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { AppRatings } from '../src/modules/app-ratings/app-ratings.entity';
 import { UserProfile } from '../src/modules/user-profile/user-profile.entity';
 
-export default class TypeOrmConfig {
-  static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
-    return {
-      type: 'postgres',
-      host: configService.get('POSTGRES_HOST'),
-      port: configService.get('POSTGRES_PORT'),
-      username: configService.get('POSTGRES_USERNAME'),
-      password: configService.get('POSTGRES_PASSWORD'),
-      database: configService.get('POSTGRES_DATABASE'),
-      ssl:
-        configService.get('NODE_ENV') === 'production'
-          ? { rejectUnauthorized: false }
-          : undefined,
-      synchronize: true,
-      entities: [AppRatings, UserProfile],
-      migrations: ['dist/db/migrations/*.js'],
-    };
-  }
-}
-
-export const typeOrmConfigAsync: TypeOrmModuleAsyncOptions = {
-  imports: [ConfigModule],
-  useFactory: async (
-    configService: ConfigService,
-  ): Promise<TypeOrmModuleOptions> => TypeOrmConfig.getOrmConfig(configService),
-  inject: [ConfigService],
+export const dataSourceOptions: DataSourceOptions = {
+  type: 'postgres',
+  host: process.env.POSTGRES_HOST,
+  port: parseInt(process.env.POSTGRES_PORT, 10),
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : undefined,
+  synchronize: true,
+  entities: [AppRatings, UserProfile],
+  migrations: ['dist/db/migrations/*.js'],
 };
+
+const dataSource = new DataSource(dataSourceOptions);
+export default dataSource;
