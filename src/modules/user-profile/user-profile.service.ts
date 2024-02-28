@@ -13,6 +13,7 @@ import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calcula
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { getWeightStatus } from '../../utils/calculate-weight-result';
 import { AgeRange } from './user-profile.enums';
+import { OrNeverType } from 'src/utils/types/or-never.type';
 
 @Injectable()
 export class UserProfileService {
@@ -106,7 +107,7 @@ export class UserProfileService {
   async putWeightStatus(
     id: number,
     weightStatusData: PutWeightStatusDto,
-  ): Promise<UserProfile> {
+  ): Promise<OrNeverType<UserProfile>> {
     const userProfileQuery = this.userProfileRepository.createQueryBuilder();
     const existingProfile = await userProfileQuery
       .where('id = :id', { id })
