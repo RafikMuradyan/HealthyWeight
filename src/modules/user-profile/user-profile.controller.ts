@@ -15,6 +15,7 @@ import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { UserProfile } from './user-profile.entity';
 import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
+import { OrNeverType } from 'src/utils/types/or-never.type';
 
 @Controller('user-profile')
 export class UserProfileController {
@@ -40,7 +41,7 @@ export class UserProfileController {
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,
-  ): Promise<UserProfile> {
+  ): Promise<OrNeverType<UserProfile>> {
     const updatedUserProfile = this.userProfileService.putWeightStatus(
       id,
       updateUserProfileDto,
