@@ -23,7 +23,7 @@ interface IByAge extends IBaseAnalitic {
 }
 
 export interface IUserAnalytics {
-  byGender: Array<IByGender>
-  byWeightStatus: Array<IByWeightStatus>
-  byAge: Array<IByAge>
+  byGender: Array<IByGender>;
+  byWeightStatus: Array<IByWeightStatus>;
+  byAge: Array<IByAge>;
 }

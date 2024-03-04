@@ -16,17 +16,21 @@ import { UserProfile } from './user-profile.entity';
 import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { OrNeverType } from 'src/utils/types/or-never.type';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User Profile')
 @Controller('user-profile')
 export class UserProfileController {
   constructor(private readonly userProfileService: UserProfileService) {}
 
+  @ApiOperation({ summary: 'Get all user profiles' })
   @Get()
   async findAll(): Promise<IUserProfileData> {
     const userProfileData = this.userProfileService.findAll();
     return userProfileData;
   }
 
+  @ApiOperation({ summary: 'Create new user profile' })
   @Post()
   @UsePipes(new ValidationPipe())
   async create(
@@ -36,6 +40,7 @@ export class UserProfileController {
     return createdUserProfile;
   }
 
+  @ApiOperation({ summary: 'Put weight status in user profile' })
   @Put(':id')
   @UsePipes(new ValidationPipe())
   async putWeightStatus(
@@ -49,6 +54,7 @@ export class UserProfileController {
     return updatedUserProfile;
   }
 
+  @ApiOperation({ summary: 'Get user profile analitycs' })
   @Get('analytics')
   async getAnalytics(): Promise<IUserAnalytics> {
     const analitycs = await this.userProfileService.getAnalytics();
