@@ -1,11 +1,20 @@
 import { IsInt, Max, Min } from 'class-validator';
-import { MAX_RATING } from '../constants';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  MAX_RATING,
+  MIN_RATING,
+  ratingDescription,
+} from '../app-ratings.constants';
 
 export class CreateAppRatingDto {
+  @ApiProperty({
+    example: 5,
+    description: ratingDescription,
+  })
   @IsInt({
     message: 'Age must be an integer',
   })
-  @Min(1, {
+  @Min(MIN_RATING, {
     message: 'Age must be positive number',
   })
   @Max(MAX_RATING, {

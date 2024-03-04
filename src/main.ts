@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import { buildSwagger } from './configs/swagger.config';
 
 async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -17,7 +18,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
       max: 100, // limit each IP to 100 requests per windowMs
     }),
   );
-
+  buildSwagger(app);
   const port = process.env.PORT || 4000;
   await app.listen(port);
   console.info(`server running on ${await app.getUrl()}`);
