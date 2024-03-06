@@ -21,40 +21,43 @@ export class UserProfileService {
   ) {}
 
   async findAll(): Promise<IUserProfileData> {
-    const userProfileQuery = this.userProfileRepository.createQueryBuilder();
-    const [userProfiles, count] = await userProfileQuery.getManyAndCount();
+    try {
+      const userProfileQuery = this.userProfileRepository.createQueryBuilder();
+      const [userProfiles, count] = await userProfileQuery.getManyAndCount();
 
-    return { userProfiles, count };
+      return { userProfiles, count };
+    } catch (error) {
+      throw new Error('Failed to fetch user profiles');
+    }
   }
 
   async create(
     userProfileData: CreateUserProfileDto,
   ): Promise<ICalculationResult> {
-    const calculationResult = this.calculateWeight.calculate(userProfileData);
-    const { minWeight, maxWeight } = calculationResult.BMI;
+    try {
+      const calculationResult = this.calculateWeight.calculate(userProfileData);
+      const { minWeight, maxWeight } = calculationResult.BMI;
 
-    const weightStatus = getWeightStatus({
-      actualWeight: userProfileData.weight,
-      minWeight,
-      maxWeight,
-    });
+      const weightStatus = getWeightStatus({
+        actualWeight: userProfileData.weight,
+        minWeight,
+        maxWeight,
+      });
 
-    const userProfileQuery = this.userProfileRepository.createQueryBuilder();
-    const userData = {
-      ...userProfileData,
-      weightStatus,
-    };
-    const createdRow = await userProfileQuery
-      .insert()
-      .values(userData)
-      .returning('*')
-      .execute();
+      const userData = {
+        ...userProfileData,
+        weightStatus,
+      };
+      const createdRow = await this.userProfileRepository.save(userData);
 
-    if (!createdRow.raw) {
-      throw new BadRequestException('Failed to create the user profile');
+      if (createdRow) {
+        throw new BadRequestException('Failed to create the user profile');
+      }
+
+      return calculationResult;
+    } catch (error) {
+      throw new Error('Failed to create user profile');
     }
-
-    return calculationResult;
   }
 
   async getAnalytics(): Promise<IUserAnalytics> {

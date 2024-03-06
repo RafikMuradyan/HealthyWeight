@@ -13,20 +13,21 @@ export class AppRatingsService {
   ) {}
 
   async findAll(): Promise<IAppRatingsData> {
-    const appRatingsQuery = this.appRatingsRepository.createQueryBuilder();
-    const [ratings, count] = await appRatingsQuery.getManyAndCount();
+    try {
+      const appRatingsQuery = this.appRatingsRepository.createQueryBuilder();
+      const [ratings, count] = await appRatingsQuery.getManyAndCount();
 
-    return { ratings, count };
+      return { ratings, count };
+    } catch (error) {
+      throw new Error('Failed to fetch app ratings');
+    }
   }
 
   async create(appRatingData: CreateAppRatingDto): Promise<AppRatings> {
-    const appRatingsQuery = this.appRatingsRepository.createQueryBuilder();
-    const createdRow = await appRatingsQuery
-      .insert()
-      .values(appRatingData)
-      .returning('*')
-      .execute();
-
-    return createdRow.raw;
+    try {
+      return this.appRatingsRepository.save(appRatingData);
+    } catch (error) {
+      throw new Error('Failed to create app rating');
+    }
   }
 }

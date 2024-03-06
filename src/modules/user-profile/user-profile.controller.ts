@@ -26,8 +26,12 @@ export class UserProfileController {
   @ApiOperation({ summary: 'Get all user profiles' })
   @Get()
   async findAll(): Promise<IUserProfileData> {
-    const userProfileData = this.userProfileService.findAll();
-    return userProfileData;
+    try {
+      const userProfileData = await this.userProfileService.findAll();
+      return userProfileData;
+    } catch (error) {
+      throw error;
+    }
   }
 
   @ApiOperation({ summary: 'Create new user profile' })
@@ -35,9 +39,13 @@ export class UserProfileController {
   @UsePipes(new ValidationPipe())
   async create(
     @Body() userProfileData: CreateUserProfileDto,
-  ): Promise<ICalculationResult> {
-    const createdUserProfile = this.userProfileService.create(userProfileData);
-    return createdUserProfile;
+  ): Promise<OrNeverType<ICalculationResult>> {
+    try {
+      const createdUserProfile = await this.userProfileService.create(userProfileData);
+      return createdUserProfile;
+    } catch (error) {
+      throw error;
+    }
   }
 
   @ApiOperation({ summary: 'Put weight status in user profile' })
@@ -47,11 +55,15 @@ export class UserProfileController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,
   ): Promise<OrNeverType<UserProfile>> {
-    const updatedUserProfile = this.userProfileService.putWeightStatus(
-      id,
-      updateUserProfileDto,
-    );
-    return updatedUserProfile;
+    try {
+      const updatedUserProfile = await this.userProfileService.putWeightStatus(
+        id,
+        updateUserProfileDto,
+      );
+      return updatedUserProfile;
+    } catch (error) {
+      throw error;
+    }
   }
 
   @ApiOperation({ summary: 'Get user profile analitycs' })
