@@ -1,21 +1,8 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { AbstractEntity } from 'src/common/abstract.entity';
+import { Entity, Column } from 'typeorm';
 
 @Entity()
-export class AppRatings {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class AppRatings extends AbstractEntity {
   @Column({ type: 'smallint', unsigned: true })
   rating: number;
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  createdAt: Date;
 }
