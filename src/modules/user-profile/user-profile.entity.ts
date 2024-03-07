@@ -1,16 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { Gender, WeightStatus } from './user-profile.enums';
+import { AbstractEntity } from 'src/common/abstract.entity';
 
 @Entity()
-export class UserProfile {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class UserProfile extends AbstractEntity {
   @Column({
     type: 'smallint',
     unsigned: true,
@@ -34,10 +27,4 @@ export class UserProfile {
     enum: WeightStatus,
   })
   weightStatus: WeightStatus;
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  public createdAt: Date;
 }
