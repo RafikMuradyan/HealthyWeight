@@ -12,7 +12,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
   });
   
   // node version must be >= 21.7.0
-  // loadEnvFile(); 
+  // loadEnvFile();
 
   app.setGlobalPrefix('api');
   app.use(helmet());
