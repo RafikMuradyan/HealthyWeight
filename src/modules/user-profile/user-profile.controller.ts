@@ -36,7 +36,9 @@ export class UserProfileController {
   async create(
     @Body() userProfileData: CreateUserProfileDto,
   ): Promise<ICalculationResult> {
-    const createdUserProfile = await this.userProfileService.create(userProfileData);
+    const createdUserProfile = await this.userProfileService.create(
+      userProfileData,
+    );
     return createdUserProfile;
   }
 
