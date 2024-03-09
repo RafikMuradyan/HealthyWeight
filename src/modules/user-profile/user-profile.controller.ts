@@ -26,7 +26,7 @@ export class UserProfileController {
   @ApiOperation({ summary: 'Get all user profiles' })
   @Get()
   async findAll(): Promise<IUserProfileData> {
-    const userProfileData = this.userProfileService.findAll();
+    const userProfileData = await this.userProfileService.findAll();
     return userProfileData;
   }
 
@@ -36,7 +36,7 @@ export class UserProfileController {
   async create(
     @Body() userProfileData: CreateUserProfileDto,
   ): Promise<ICalculationResult> {
-    const createdUserProfile = this.userProfileService.create(userProfileData);
+    const createdUserProfile = await this.userProfileService.create(userProfileData);
     return createdUserProfile;
   }
 
@@ -47,7 +47,7 @@ export class UserProfileController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,
   ): Promise<OrNeverType<UserProfile>> {
-    const updatedUserProfile = this.userProfileService.putWeightStatus(
+    const updatedUserProfile = await this.userProfileService.putWeightStatus(
       id,
       updateUserProfileDto,
     );

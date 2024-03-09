@@ -23,14 +23,14 @@ export class AppRatingsController {
   async createRating(
     @Body() appRatingData: CreateAppRatingDto,
   ): Promise<AppRatings> {
-    const createdRatig = this.appRatingsService.create(appRatingData);
+    const createdRatig = await this.appRatingsService.create(appRatingData);
     return createdRatig;
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all ratings' })
   async findAll(): Promise<IAppRatingsData> {
-    const appRatingsData = this.appRatingsService.findAll();
+    const appRatingsData = await this.appRatingsService.findAll();
     return appRatingsData;
   }
 }
