@@ -15,7 +15,7 @@ import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { UserProfile } from './user-profile.entity';
 import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
-import { OrNeverType } from 'src/utils/types/or-never.type';
+import { OrNeverType } from '../../utils/types/or-never.type';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User Profile')

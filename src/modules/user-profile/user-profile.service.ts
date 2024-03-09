@@ -9,7 +9,7 @@ import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calcula
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { getWeightStatus } from '../../utils/calculate-weight-result';
 import { AgeRange } from './user-profile.enums';
-import { OrNeverType } from 'src/utils/types/or-never.type';
+import { OrNeverType } from '../../utils/types/or-never.type';
 import { UserNotFoundException } from './exceptions';
 
 @Injectable()
