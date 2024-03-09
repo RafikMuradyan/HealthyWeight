@@ -75,20 +75,12 @@ export class UserProfileService {
     const byAge = await this.userProfileRepository
       .createQueryBuilder('user')
       .select(
-        "CASE \
-        WHEN user.age <= 16 THEN '" +
-          AgeRange.To16 +
-          "' \
-        WHEN user.age <= 35 THEN '" +
-          AgeRange.From17To35 +
-          "' \
-        WHEN user.age <= 50 THEN '" +
-          AgeRange.From36To50 +
-          "' \
-        ELSE '" +
-          AgeRange.From50 +
-          '\' \
-      END AS "ageRange"',
+        `CASE \
+        WHEN user.age <= 16 THEN '${AgeRange.To16}' \
+        WHEN user.age <= 35 THEN '${AgeRange.From17To35}' \
+        WHEN user.age <= 50 THEN '${AgeRange.From36To50}' \
+        ELSE '${AgeRange.From50}' \
+      END AS "ageRange"`,
       )
       .addSelect('COUNT(*)', 'count')
       .groupBy('"ageRange"')

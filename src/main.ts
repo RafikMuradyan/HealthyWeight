@@ -4,13 +4,13 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { buildSwagger } from './configs/swagger.config';
-const { loadEnvFile } = require('node:process');
+// const { loadEnvFile } = require('node:process');
 
 async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
   });
-  
+
   // node version must be >= 21.7.0
   // loadEnvFile();
 

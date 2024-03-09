@@ -26,7 +26,7 @@ export class SnakeNamingStrategy
   }
 
   joinColumnName(relationName: string, referencedColumnName: string): string {
-    return snakeCase(relationName + '_' + referencedColumnName);
+    return snakeCase(`${relationName}_${referencedColumnName}`);
   }
 
   joinTableName(
@@ -36,11 +36,10 @@ export class SnakeNamingStrategy
     _secondPropertyName: string,
   ): string {
     return snakeCase(
-      firstTableName +
-        '_' +
-        firstPropertyName.replace(/\./gi, '_') +
-        '_' +
-        secondTableName,
+      `${firstTableName}_${firstPropertyName.replace(
+        /\./gi,
+        '_',
+      )}_${secondTableName}`,
     );
   }
 
@@ -49,7 +48,7 @@ export class SnakeNamingStrategy
     propertyName: string,
     columnName?: string,
   ): string {
-    return snakeCase(tableName + '_' + (columnName ?? propertyName));
+    return snakeCase(`${tableName}_${columnName ?? propertyName}`);
   }
 
   classTableInheritanceParentColumnName(
