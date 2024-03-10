@@ -51,6 +51,10 @@ export class CreateUserProfileDto {
     description: genderDescription,
   })
   @IsString()
-  @IsIn(Object.values(Gender), { message: 'Gender must be Male or Female' })
+  @IsIn(Object.values(Gender), {
+    message: `Gender must be one of the following values: ${Object.values(
+      Gender,
+    ).join(', ')}.`,
+  })
   gender: Gender;
 }

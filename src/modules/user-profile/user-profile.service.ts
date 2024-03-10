@@ -105,8 +105,7 @@ export class UserProfileService {
     if (!existingProfile) {
       throw new UserNotFoundException();
     }
-
-    existingProfile.weightStatus = weightStatusData.weightStatus;
+    this.userProfileRepository.merge(existingProfile, weightStatusData);
     const updatedRaw = await this.userProfileRepository.save(existingProfile);
 
     return updatedRaw;
