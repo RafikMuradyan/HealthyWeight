@@ -2,13 +2,15 @@ import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function buildSwagger(app: INestApplication): void {
-  const config = new DocumentBuilder()
+  const documentBuilder = new DocumentBuilder()
     .setTitle('Healty Weight')
-    .setDescription('API description')
-    .setVersion('1.0')
-    .addTag('')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
+    .setDescription('API description');
 
-  SwaggerModule.setup('swagger', app, document);
+  if (process.env.API_VERSION) {
+    documentBuilder.setVersion(process.env.API_VERSION);
+  }
+
+  const document = SwaggerModule.createDocument(app, documentBuilder.build());
+
+  SwaggerModule.setup('documentation', app, document);
 }
