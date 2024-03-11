@@ -15,7 +15,7 @@ import { UserProfileService } from './user-profile.service';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
 import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
 import { UserProfile } from './user-profile.entity';
-import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
+import { IUserAnalytics } from './user-profile.interfaces';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { OrNeverType } from '../../utils/types/or-never.type';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -25,14 +25,13 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UserProfileController {
   constructor(private readonly userProfileService: UserProfileService) {}
 
-  @ApiOperation({ summary: 'Get all user profiles' })
+  @ApiOperation({ summary: 'Get count of all user profiles' })
   @Get()
-  @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<IUserProfileData> {
-    const userProfileData = await this.userProfileService.findAll();
-    return userProfileData;
+  async getCount(): Promise<number> {
+    const userProfileCount = await this.userProfileService.getCount();
+    return userProfileCount;
   }
-
+  
   @ApiOperation({ summary: 'Create new user profile' })
   @Post()
   @HttpCode(HttpStatus.CREATED)
