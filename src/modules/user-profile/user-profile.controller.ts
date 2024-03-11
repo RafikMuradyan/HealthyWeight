@@ -26,6 +26,7 @@ export class UserProfileController {
   constructor(private readonly userProfileService: UserProfileService) {}
 
   @ApiOperation({ summary: 'Get count of all user profiles' })
+  @HttpCode(HttpStatus.OK)
   @Get()
   async getCount(): Promise<number> {
     const userProfileCount = await this.userProfileService.getCount();
