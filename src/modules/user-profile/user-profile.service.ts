@@ -10,7 +10,7 @@ import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate
 import { getWeightStatus } from '../../utils/calculate-weight-result';
 import { AgeRange } from './user-profile.enums';
 import { OrNeverType } from '../../utils/types/or-never.type';
-import { UserNotFoundException } from './exceptions';
+import { UserProfileNotFoundException } from './exceptions';
 
 @Injectable()
 export class UserProfileService {
@@ -103,7 +103,7 @@ export class UserProfileService {
       .getOne();
 
     if (!existingProfile) {
-      throw new UserNotFoundException();
+      throw new UserProfileNotFoundException();
     }
     this.userProfileRepository.merge(existingProfile, weightStatusData);
     const updatedRaw = await this.userProfileRepository.save(existingProfile);
