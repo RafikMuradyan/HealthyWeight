@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   UsePipes,
   ValidationPipe,
@@ -18,6 +20,7 @@ export class AppRatingsController {
   constructor(private readonly appRatingsService: AppRatingsService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new rating' })
   @UsePipes(new ValidationPipe())
   async createRating(
@@ -28,6 +31,7 @@ export class AppRatingsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all ratings' })
   async findAll(): Promise<IAppRatingsData> {
     const appRatingsData = await this.appRatingsService.findAll();
