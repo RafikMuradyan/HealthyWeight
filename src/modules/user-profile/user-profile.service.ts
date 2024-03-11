@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { UserProfile } from './user-profile.entity';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
 import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
-import { IUserAnalytics, IUserProfileData } from './user-profile.interfaces';
+import { IUserAnalytics } from './user-profile.interfaces';
 import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.service';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
 import { getWeightStatus } from '../../utils/calculate-weight-result';
@@ -20,11 +20,11 @@ export class UserProfileService {
     private readonly calculateWeight: CalculateIdealWeight,
   ) {}
 
-  async findAll(): Promise<IUserProfileData> {
+  async getCount(): Promise<number> {
     const userProfileQuery = this.userProfileRepository.createQueryBuilder();
-    const [userProfiles, count] = await userProfileQuery.getManyAndCount();
+    const count = await userProfileQuery.getCount();
 
-    return { userProfiles, count };
+    return count;
   }
 
   async create(
