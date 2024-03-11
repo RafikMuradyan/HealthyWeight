@@ -12,13 +12,13 @@ export class CreateAppRatingDto {
     description: ratingDescription,
   })
   @IsInt({
-    message: 'Age must be an integer',
+    message: 'Rating must be an integer.',
   })
   @Min(MIN_RATING, {
-    message: 'Age must be positive number',
+    message: 'Rating must be positive number.',
   })
   @Max(MAX_RATING, {
-    message: `App rating mus be less or equal to ${MAX_RATING}`,
+    message: `Rating must be less than or equal to ${MAX_RATING}.`,
   })
   rating: number;
 }

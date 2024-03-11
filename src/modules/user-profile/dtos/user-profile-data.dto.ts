@@ -13,30 +13,34 @@ import {
 
 export class UserProfileDataDto {
   @ApiProperty({
-    example: '80',
+    example: 25,
     description: ageDescription,
   })
-  @IsInt({ message: 'Age must be an integer' })
-  @Min(MIN_AGE, { message: 'Age must be positive number' })
-  @Max(MAX_AGE, { message: `Age must be less then or equal to ${MAX_AGE}` })
+  @IsInt({ message: 'Age must be an integer.' })
+  @Min(MIN_AGE, { message: 'Age must be positive number.' })
+  @Max(MAX_AGE, { message: `Age must be less then or equal to ${MAX_AGE}.` })
   age: number;
 
   @ApiProperty({
-    example: '180',
+    example: 180,
     description: heightDescription,
   })
-  @IsInt({ message: 'Height must be an integer' })
-  @Min(MIN_HEIGHT, { message: 'Height must be positive number' })
+  @IsInt({ message: 'Height must be an integer.' })
+  @Min(MIN_HEIGHT, { message: 'Height must be positive number.' })
   @Max(MAX_HEIGHT, {
-    message: `Height must be less then or equal to ${MAX_HEIGHT}`,
+    message: `Height must be less then or equal to ${MAX_HEIGHT}.`,
   })
   height: number;
 
   @ApiProperty({
-    example: 'Normal',
+    example: `${Gender.MALE}`,
     description: genderDescription,
   })
   @IsString()
-  @IsIn(Object.values(Gender), { message: 'Gender must be Male or Female' })
+  @IsIn(Object.values(Gender), {
+    message: `Gender must be one of the following values: ${Object.values(
+      Gender,
+    ).join(', ')}.`,
+  })
   gender: Gender;
 }

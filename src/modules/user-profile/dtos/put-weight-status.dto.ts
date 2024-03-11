@@ -5,7 +5,7 @@ import { weightStatusDescription } from '../user-profile.constants';
 
 export class PutWeightStatusDto {
   @ApiProperty({
-    example: 'normal',
+    example: WeightStatus.NORMAL,
     description: weightStatusDescription,
   })
   @IsString()
