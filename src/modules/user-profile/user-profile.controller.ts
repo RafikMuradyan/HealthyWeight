@@ -8,6 +8,8 @@ import {
   ParseIntPipe,
   Put,
   UsePipes,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserProfileService } from './user-profile.service';
 import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
@@ -29,9 +31,10 @@ export class UserProfileController {
     const userProfileCount = await this.userProfileService.getCount();
     return userProfileCount;
   }
-
+  
   @ApiOperation({ summary: 'Create new user profile' })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   async create(
     @Body() userProfileData: CreateUserProfileDto,
@@ -44,6 +47,7 @@ export class UserProfileController {
 
   @ApiOperation({ summary: 'Put weight status in user profile' })
   @Put(':id')
+  @HttpCode(HttpStatus.ACCEPTED)
   @UsePipes(new ValidationPipe())
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
@@ -58,6 +62,7 @@ export class UserProfileController {
 
   @ApiOperation({ summary: 'Get user profile analitycs' })
   @Get('analytics')
+  @HttpCode(HttpStatus.OK)
   async getAnalytics(): Promise<IUserAnalytics> {
     const analitycs = await this.userProfileService.getAnalytics();
 
