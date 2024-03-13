@@ -5,7 +5,6 @@ export interface IBMIResult {
 
 export interface ICalculationResult {
   BMI: IBMIResult;
-
   robinsonFormula: number;
   millerFormula: number;
   devineFormula: number;
