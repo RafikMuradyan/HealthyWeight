@@ -32,7 +32,7 @@ export class UserProfileController {
     const userProfileCount = await this.userProfileService.getCount();
     return userProfileCount;
   }
-  
+
   @ApiOperation({ summary: 'Create new user profile' })
   @Post()
   @HttpCode(HttpStatus.CREATED)
