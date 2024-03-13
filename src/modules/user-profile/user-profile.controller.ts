@@ -33,9 +33,6 @@ export class UserProfileController {
     return userProfileCount;
   }
 
-
-
-  
   @ApiOperation({ summary: 'Create new user profile' })
   @Post()
   @HttpCode(HttpStatus.CREATED)
