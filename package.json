@@ -69,9 +69,9 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format"
+      "pre-commit": "npm run format && git add ."
     }
-  },
+} ,
   "jest": {
     "moduleFileExtensions": [
       "js",
