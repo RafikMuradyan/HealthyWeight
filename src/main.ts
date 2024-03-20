@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import { buildSwagger } from './configs/swagger.config';
+import { buildSwagger } from './configs';
 // const { loadEnvFile } = require('node:process');
 
 async function bootstrap(): Promise<NestExpressApplication> {

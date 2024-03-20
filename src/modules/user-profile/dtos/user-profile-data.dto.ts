@@ -1,5 +1,5 @@
 import { IsString, IsInt, IsIn, Min, Max } from 'class-validator';
-import { Gender } from '../user-profile.enums';
+import { Gender } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   MAX_AGE,
@@ -9,7 +9,7 @@ import {
   ageDescription,
   genderDescription,
   heightDescription,
-} from '../user-profile.constants';
+} from '../constants';
 
 export class UserProfileDataDto {
   @ApiProperty({

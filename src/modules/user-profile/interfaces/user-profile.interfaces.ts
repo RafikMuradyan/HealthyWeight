@@ -1,5 +1,5 @@
-import { UserProfile } from './user-profile.entity';
-import { Gender, WeightStatus } from './user-profile.enums';
+import { UserProfile } from '../user-profile.entity';
+import { Gender, WeightStatus } from '../enums';
 
 export interface IUserProfileData {
   userProfiles: UserProfile[];

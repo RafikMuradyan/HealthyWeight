@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UserProfileDataDto } from '../../modules/user-profile/dtos/user-profile-data.dto';
-import { Gender } from '../../modules/user-profile/user-profile.enums';
-import {
-  IBMIResult,
-  ICalculationResult,
-} from './calculate-ideal-weight.interfaces';
+import { UserProfileDataDto } from '../../modules/user-profile/dtos';
+import { Gender } from '../../modules/user-profile/enums';
+import { IBMIResult, ICalculationResult } from './interfaces';
 
 @Injectable()
 export class CalculateIdealWeight {

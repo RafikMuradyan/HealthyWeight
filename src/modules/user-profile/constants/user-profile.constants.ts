@@ -1,4 +1,4 @@
-import { Gender, WeightStatus } from './user-profile.enums';
+import { Gender, WeightStatus } from '../enums';
 
 export const MIN_AGE = 1;
 export const MAX_AGE = 100;

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppRatings } from './app-ratings.entity';
-import { CreateAppRatingDto } from './dtos/create-app-rating.dto';
-import { IAppRatingsData } from './app-ratings.interfaces';
+import { CreateAppRatingDto } from './dtos';
+import { IAppRatingsData } from './interfaces';
 
 @Injectable()
 export class AppRatingsService {
