@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
-import { Gender, WeightStatus } from './user-profile.enums';
-import { AbstractEntity } from '../../common/abstract.entity';
+import { AbstractEntity } from '../../common';
+import { Gender, WeightStatus } from './enums';
 
 @Entity({ name: 'user_profile' })
 export class UserProfile extends AbstractEntity {

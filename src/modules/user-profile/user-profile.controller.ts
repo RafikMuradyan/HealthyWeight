@@ -12,12 +12,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UserProfileService } from './user-profile.service';
-import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
-import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
+import { CreateUserProfileDto, PutWeightStatusDto } from './dtos';
 import { UserProfile } from './user-profile.entity';
-import { IUserAnalytics } from './user-profile.interfaces';
-import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
-import { OrNeverType } from '../../utils/types/or-never.type';
+import { IUserAnalytics } from './interfaces';
+import { ICalculationResult } from '../../utils/calculate-ideal-weight/interfaces';
+import { OrNeverType } from '../../utils/types';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User Profile')

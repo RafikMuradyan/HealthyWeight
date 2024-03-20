@@ -1,4 +1,4 @@
-import { AbstractEntity } from '../../common/abstract.entity';
+import { AbstractEntity } from '../../common';
 import { Entity, Column } from 'typeorm';
 
 @Entity({ name: 'app_ratings' })

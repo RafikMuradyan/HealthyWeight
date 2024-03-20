@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { AppRatingsService } from './app-ratings.service';
 import { AppRatings } from './app-ratings.entity';
-import { CreateAppRatingDto } from './dtos/create-app-rating.dto';
-import { IAppRatingsData } from './app-ratings.interfaces';
+import { CreateAppRatingDto } from './dtos';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { IAppRatingsData } from './interfaces';
 
 @ApiTags('App Ratings')
 @Controller('app-ratings')

@@ -1,11 +1,7 @@
 import { IsInt, Min, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserProfileDataDto } from './user-profile-data.dto';
-import {
-  MAX_WEIGHT,
-  MIN_WEIGHT,
-  weightDescription,
-} from '../user-profile.constants';
+import { UserProfileDataDto } from '../dtos/user-profile-data.dto';
+import { MAX_WEIGHT, MIN_WEIGHT, weightDescription } from '../constants';
 
 export class CreateUserProfileDto extends UserProfileDataDto {
   @ApiProperty({

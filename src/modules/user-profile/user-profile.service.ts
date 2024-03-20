@@ -2,14 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from './user-profile.entity';
-import { CreateUserProfileDto } from './dtos/create-user-profile.dto';
-import { PutWeightStatusDto } from './dtos/put-weight-status.dto';
-import { IUserAnalytics } from './user-profile.interfaces';
+import { CreateUserProfileDto, PutWeightStatusDto } from './dtos';
+import { IUserAnalytics } from './interfaces';
 import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.service';
-import { ICalculationResult } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.interfaces';
+import { ICalculationResult } from '../../utils/calculate-ideal-weight/interfaces';
 import { getWeightStatus } from '../../utils/calculate-weight-result';
-import { AgeRange } from './user-profile.enums';
-import { OrNeverType } from '../../utils/types/or-never.type';
+import { AgeRange } from './enums';
+import { OrNeverType } from '../../utils/types';
 import { UserProfileNotFoundException } from './exceptions';
 
 @Injectable()

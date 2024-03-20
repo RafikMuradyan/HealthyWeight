@@ -1,7 +1,7 @@
 import { IsString, IsIn } from 'class-validator';
-import { WeightStatus } from '../user-profile.enums';
+import { WeightStatus } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { weightStatusDescription } from '../user-profile.constants';
+import { weightStatusDescription } from '../constants';
 
 export class PutWeightStatusDto {
   @ApiProperty({
