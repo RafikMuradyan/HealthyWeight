@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { UserProfileDataDto } from '../../modules/user-profile/dtos';
-import { Gender } from '../../modules/user-profile/enums';
-import { IBMIResult, ICalculationResult } from './interfaces';
+import { Gender, WeightStatus } from '../../modules/user-profile/enums';
+import {
+  IBMIResult,
+  ICalculationResult,
+  IWeightStatusData,
+} from './interfaces';
 
 @Injectable()
 export class CalculateIdealWeight {
@@ -21,6 +25,15 @@ export class CalculateIdealWeight {
     };
 
     return result;
+  }
+
+  public getWeightStatus(weightData: IWeightStatusData): WeightStatus {
+    const { actualWeight, minWeight, maxWeight } = weightData;
+    return actualWeight < minWeight
+      ? WeightStatus.UNDERWEIGHT
+      : actualWeight > maxWeight
+      ? WeightStatus.OVERWEIGHT
+      : WeightStatus.NORMAL;
   }
 
   private byBMI(userProfileData: UserProfileDataDto): IBMIResult {

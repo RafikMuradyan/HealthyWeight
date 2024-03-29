@@ -2,6 +2,7 @@ require('dotenv').config();
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AppRatings } from '../src/modules/app-ratings/app-ratings.entity';
 import { UserProfile } from '../src/modules/user-profile/user-profile.entity';
+import databaseConfigSchema from 'src/utils/joi/database-config.schema';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -14,10 +15,14 @@ export const dataSourceOptions: DataSourceOptions = {
     process.env.NODE_ENV === 'production'
       ? { rejectUnauthorized: false }
       : undefined,
-  synchronize: true,
+  synchronize: false,
   entities: [AppRatings, UserProfile],
   migrations: ['dist/db/migrations/*.js'],
 };
+
+const { error, value } = databaseConfigSchema.validate(dataSourceOptions);
+
+if (error) throw new Error(`Invalid database configuration: ${error.message}`);
 
 const dataSource = new DataSource(dataSourceOptions);
 export default dataSource;

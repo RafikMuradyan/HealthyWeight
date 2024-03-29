@@ -6,7 +6,6 @@ import { CreateUserProfileDto, PutWeightStatusDto } from './dtos';
 import { IUserAnalytics } from './interfaces';
 import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.service';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/interfaces';
-import { getWeightStatus } from '../../utils/calculate-weight-result';
 import { AgeRange } from './enums';
 import { OrNeverType } from '../../utils/types';
 import { UserProfileNotFoundException } from './exceptions';
@@ -32,7 +31,7 @@ export class UserProfileService {
     const calculationResult = this.calculateWeight.calculate(userProfileData);
     const { minWeight, maxWeight } = calculationResult.BMI;
 
-    const weightStatus = getWeightStatus({
+    const weightStatus = this.calculateWeight.getWeightStatus({
       actualWeight: userProfileData.weight,
       minWeight,
       maxWeight,
