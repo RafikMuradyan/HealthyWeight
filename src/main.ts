@@ -25,7 +25,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
   buildSwagger(app);
   const port = process.env.PORT || 4000;
   await app.listen(port);
-  console.info(`Server running on http://localhost:${process.env.PORT}`);
+  console.info(`Server running on http://localhost:${port}`);
 
   return app;
 }
