@@ -20,7 +20,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/db/migrations/*.js'],
 };
 
-const { error, value } = databaseConfigSchema.validate(dataSourceOptions);
+const { error } = databaseConfigSchema.validate(dataSourceOptions);
 
 if (error) throw new Error(`Invalid database configuration: ${error.message}`);
 
