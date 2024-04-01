@@ -14,7 +14,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-      target: development
     volumes:
       - .:/usr/src/app
     environment:
@@ -24,7 +23,6 @@ services:
       DB_USERNAME: ${POSTGRES_USERNAME}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DATABASE}
-    command: npm run start:dev
     ports:
       - 3000:3000
 volumes:
