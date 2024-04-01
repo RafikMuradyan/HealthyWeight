@@ -31,6 +31,5 @@ COPY . .
 EXPOSE $PORT
 
 # Run migrations
-RUN npm run typeorm -- migration:run
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
