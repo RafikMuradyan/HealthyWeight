@@ -6,7 +6,7 @@ import { CreateAppRatingDto } from './dtos';
 import { IAppRatingsData } from './interfaces';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-describe('AppRatingsController (e2e)', () => {
+describe('AppRatingsController', () => {
   let controller: AppRatingsController;
   let service: AppRatingsService;
 
