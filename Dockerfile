@@ -1,35 +1,28 @@
-# Stage 1: Install dependencies
-FROM node:lts AS node_modules
+# Use the Node.js LTS image as the base image for building
+FROM node:lts AS build
 
-WORKDIR /usr/src/app
+# Set the working directory inside the container
+WORKDIR /app
 
+# Copy package.json and package-lock.json to the working directory
 COPY package.json package-lock.json ./
 
+# Copy the rest of the application code to the working directory
+COPY . .
+
+# Install dependencies
 RUN npm install
 
-# Stage 2: Build application
-FROM node:lts AS dist
-
-WORKDIR /usr/src/app
-
-COPY . .
-
+# Build the application
 RUN npm run build
 
-# Stage 3: Create the final image
-FROM node:lts
-
+# Define the port number the container should expose
 ARG PORT=3000
 ENV PORT $PORT
-
-WORKDIR /usr/src/app
-
-COPY --from=dist /usr/src/app/dist ./dist
-COPY --from=node_modules /usr/src/app/node_modules ./node_modules
-COPY . .
-
 EXPOSE $PORT
 
-# Run migrations
+# Set the entry point command to start the application in development mode
+ENTRYPOINT ["npm", "run", "start:dev"]
 
-CMD ["npm", "run", "start:dev"]
+# Run migrations when the container starts
+CMD [ "npm run migration:run" ]
