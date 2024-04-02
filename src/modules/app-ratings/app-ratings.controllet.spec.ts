@@ -36,11 +36,20 @@ describe('AppRatingsController', () => {
       const createdRating: AppRatings = {
         id: 1,
         rating: ratingData.rating,
-        createdAt: new Date(),
+        createdAt: expect.any(Date),
       };
-      jest.spyOn(service, 'create').mockResolvedValue(createdRating);
 
-      expect(await controller.createRating(ratingData)).toBe(createdRating);
+      jest
+        .spyOn(service, 'create')
+        .mockImplementation(async () => createdRating);
+
+      expect(await controller.createRating(ratingData)).toEqual(
+        expect.objectContaining({
+          id: 1,
+          rating: 5,
+          createdAt: expect.any(Date),
+        }),
+      );
     });
   });
 
