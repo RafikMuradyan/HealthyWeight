@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" ",
     "start": "nest start",
-    "start:dev": "npm run lint && nest start --watch",
+    "start:dev": "npm run lint && npm run test && nest start --watch",
     "start:swc": "npm run lint && nest start -b swc --type-check -w",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
