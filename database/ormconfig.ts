@@ -17,7 +17,7 @@ export const dataSourceOptions: DataSourceOptions = {
       : undefined,
   synchronize: false,
   entities: [AppRatings, UserProfile],
-  migrations: ['dist/db/migrations/*.js'],
+  migrations: ['dist/database/migrations/*.js'],
 };
 
 const { error } = databaseConfigSchema.validate(dataSourceOptions);
