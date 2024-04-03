@@ -5,6 +5,7 @@ import { AppRatingsModule } from './modules/app-ratings/app-ratings.module';
 import { UserProfileModule } from './modules/user-profile/user-profile.module';
 import { dataSourceOptions } from '../database/ormconfig';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { HealthCheckerModule } from './modules/health-checker/health-checker.mod
     AppRatingsModule,
     UserProfileModule,
     HealthCheckerModule,
+    FeedbackModule,
   ],
   controllers: [],
   providers: [],
