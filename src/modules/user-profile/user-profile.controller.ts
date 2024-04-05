@@ -3,11 +3,9 @@ import {
   Get,
   Post,
   Body,
-  ValidationPipe,
   Param,
   ParseIntPipe,
   Put,
-  UsePipes,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -35,7 +33,6 @@ export class UserProfileController {
   @ApiOperation({ summary: 'Create new user profile' })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe())
   async create(
     @Body() userProfileData: CreateUserProfileDto,
   ): Promise<ICalculationResult> {
@@ -48,7 +45,6 @@ export class UserProfileController {
   @ApiOperation({ summary: 'Put weight status in user profile' })
   @Put(':id')
   @HttpCode(HttpStatus.ACCEPTED)
-  @UsePipes(new ValidationPipe())
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,

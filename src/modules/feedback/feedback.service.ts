@@ -12,13 +12,12 @@ export class FeedbackService {
   ) {}
 
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
-    const feedbackQuery = this.feedbackRepository.createQueryBuilder();
-    const createdRow = await feedbackQuery
-      .insert()
-      .values(feedbackData)
-      .returning('*')
-      .execute();
+    const createdFeedback = this.feedbackRepository.create(feedbackData);
 
-    return createdRow.raw;
+    return this.feedbackRepository.save(createdFeedback);
+  }
+
+  async findAll(): Promise<Feedback[]> {
+    return this.feedbackRepository.find();
   }
 }

@@ -15,6 +15,10 @@ export class FeedbackSubscriber implements EntitySubscriberInterface<Feedback> {
     this.updateFullName(event.entity);
   }
 
+  async afterLoad(feedback: Feedback) {
+    feedback.fullName = `${feedback.firstName} ${feedback.lastName}`;
+  }
+
   private updateFullName(feedback: Feedback) {
     feedback.fullName = `${feedback.firstName} ${feedback.lastName}`;
   }

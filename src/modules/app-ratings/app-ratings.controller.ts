@@ -5,8 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AppRatingsService } from './app-ratings.service';
 import { AppRatings } from './app-ratings.entity';
@@ -22,7 +20,6 @@ export class AppRatingsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new rating' })
-  @UsePipes(new ValidationPipe())
   async createRating(
     @Body() appRatingData: CreateAppRatingDto,
   ): Promise<AppRatings> {
