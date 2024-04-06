@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Post,
   Query,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dtos/create-feedback.dto';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageOptionsDto } from 'src/common/dtos';
+import * as jwt from 'jsonwebtoken';
 
 @ApiTags('Feedback')
 @Controller('feedback')
@@ -32,7 +35,29 @@ export class FeedbackController {
   async findAll(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Feedback>> {
-    const createdFeedback = await this.feedbackService.findAll(pageOptionsDto);
+    const createdFeedback = await this.feedbackService.findAllConfirmed(
+      pageOptionsDto,
+    );
     return createdFeedback;
+  }
+
+  @Get('confirm')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Confirm feedback' })
+  async confirmFeedback(
+    @Query('token') token: string,
+  ): Promise<PageDto<Feedback>> {
+    if (!token) {
+      throw new NotFoundException('Token not found');
+    }
+
+    try {
+      const decodedToken = jwt.verify(token, 'secret');
+      const feedbackId = decodedToken;
+    } catch (error) {
+      throw new BadRequestException('Invalid token');
+    }
+
+    return null;
   }
 }

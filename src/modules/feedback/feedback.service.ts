@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { CreateFeedbackDto } from './dtos/create-feedback.dto';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from 'src/common/dtos';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class FeedbackService {
   constructor(
     @InjectRepository(Feedback)
     private readonly feedbackRepository: Repository<Feedback>,
+    private readonly emailService: EmailService,
   ) {}
 
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
@@ -18,7 +20,13 @@ export class FeedbackService {
     return this.feedbackRepository.save(createdFeedback);
   }
 
-  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Feedback>> {
+  async confirmFeedback(feedbackId: number): Promise<boolean> {
+    return true;
+  }
+
+  async findAllConfirmed(
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<Feedback>> {
     const queryBuilder =
       this.feedbackRepository.createQueryBuilder('feedbacks');
 

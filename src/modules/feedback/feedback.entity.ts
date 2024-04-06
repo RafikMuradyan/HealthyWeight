@@ -14,6 +14,9 @@ export class Feedback extends AbstractEntity {
   @Column({ nullable: false, type: 'text' })
   content!: string;
 
+  @Column({ type: 'boolean', default: false })
+  isConfirmed!: boolean;
+
   @AfterLoad()
   updateFullNameAfterLoad(): void {
     this.fullName = `${this.firstName} ${this.lastName}`;
