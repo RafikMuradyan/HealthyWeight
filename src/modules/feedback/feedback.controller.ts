@@ -5,11 +5,13 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dtos/create-feedback.dto';
 import { Feedback } from './feedback.entity';
+import { PageDto, PageOptionsDto } from 'src/common/dtos';
 
 @ApiTags('Feedback')
 @Controller('feedback')
@@ -27,8 +29,10 @@ export class FeedbackController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get list of feedbacks' })
-  async findAll(): Promise<Feedback[]> {
-    const createdFeedback = await this.feedbackService.findAll();
+  async findAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<Feedback>> {
+    const createdFeedback = await this.feedbackService.findAll(pageOptionsDto);
     return createdFeedback;
   }
 }

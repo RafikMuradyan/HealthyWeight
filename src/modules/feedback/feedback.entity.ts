@@ -1,4 +1,4 @@
-import { AbstractEntity } from '../../common';
+import { AbstractEntity } from '../../common/entities';
 import { Entity, Column, AfterLoad } from 'typeorm';
 
 @Entity({ name: 'feedbacks' })
@@ -15,7 +15,7 @@ export class Feedback extends AbstractEntity {
   content!: string;
 
   @AfterLoad()
-  updateFullNameAfterLoad() {
+  updateFullNameAfterLoad(): void {
     this.fullName = `${this.firstName} ${this.lastName}`;
   }
 }

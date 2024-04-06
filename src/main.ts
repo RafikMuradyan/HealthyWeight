@@ -17,7 +17,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
 
   app.setGlobalPrefix('api');
   app.use(helmet());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(
     rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
