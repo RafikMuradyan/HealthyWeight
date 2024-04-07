@@ -1,16 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Transporter } from 'nodemailer';
 import { IEmailDetails } from './interfaces';
-import { createTransport } from 'src/configs';
+import { createTransport } from '../../configs';
 
 @Injectable()
 export class EmailService {
-  async sendEmail(feedback: IEmailDetails) {
+  async sendEmail(feedback: IEmailDetails): Promise<string> {
     try {
-      const transporter = createTransport();
+      const transporter: Transporter = createTransport();
 
       const mailOptions = {
         from: feedback.from,
-        to: ['muradyanrafik1@gmail.com'],
+        to: feedback.to,
         subject: feedback.subject,
         html: feedback.html,
       };

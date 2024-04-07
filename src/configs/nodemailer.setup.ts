@@ -1,6 +1,7 @@
 import * as nodemailer from 'nodemailer';
+import { Transporter } from 'nodemailer';
 
-export function createTransport() {
+export function createTransport(): Transporter {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {

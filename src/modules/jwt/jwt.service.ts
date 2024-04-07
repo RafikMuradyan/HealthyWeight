@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ITokenPayload } from '../notification/interfaces';
 
@@ -10,5 +10,17 @@ export class JwtService {
     });
 
     return token;
+  }
+
+  public verifyToken(token: string): ITokenPayload {
+    try {
+      const decodedToken = jwt.verify(
+        token,
+        process.env.JWT_SECRET,
+      ) as ITokenPayload;
+      return decodedToken;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

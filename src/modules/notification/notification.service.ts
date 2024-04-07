@@ -1,11 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
-import * as jwt from 'jsonwebtoken';
-import * as fs from 'fs';
-import * as path from 'path';
 import { IFeedback, IFeedbackHTML, ITokenPayload } from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
-import { InjectRepository } from '@nestjs/typeorm';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
 
@@ -16,14 +11,11 @@ export class NotificationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async sendFeedbackNotification(feedback: IFeedback) {
+  async sendFeedbackNotification(feedback: IFeedback): Promise<void> {
     try {
       const payload: ITokenPayload = { feedbackId: feedback.id };
-      console.log(321);
 
       const token = this.jwtService.generateToken(payload);
-
-      console.log(12);
 
       const BASE_API = process.env.BASE_API;
       if (!BASE_API) {
@@ -32,14 +24,14 @@ export class NotificationService {
 
       const confirmLink = `${process.env.BASE_API}/feedback/confirm?token=${token}`;
       const from = process.env.EMAIL_USER;
-      const to = process.env.RECIPIENT;
+      const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
       const subject = FEEDBACK_SUBJECT;
       const html = this.createFeedbackHTMLBody({
         fullName: feedback.fullName,
         content: feedback.content,
         url: confirmLink,
       });
-
+      console.log(confirmLink, 'confirmLink1111111');
       await this.emailService.sendEmail({ from, to, subject, html });
     } catch (error) {
       console.error('Error sending email:', error);
@@ -47,7 +39,11 @@ export class NotificationService {
     }
   }
 
-  private createFeedbackHTMLBody(feedback: IFeedbackHTML) {
+  private createFeedbackHTMLBody(feedback: IFeedbackHTML): string {
+    const buttonHtml = `
+    <button type="button" style="padding: 10px 20px; background-color: #007bff; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" onclick="sendConfirmationRequest('${feedback.url}')">Confirm Feedback</button>
+  `;
+
     return `
     <html>
       <head>
@@ -73,12 +69,17 @@ export class NotificationService {
         <div class="container">
           <h1>Feedback from ${feedback.fullName}</h1>
           <p>${feedback.content}</p>
-           <button class="button" id='apiForm'>Confirm Feedback</button>
-        </div>
-        <script>
-         document.getElementById('apiForm').addEventListener('click', function() {
-        fetch(${feedback.url})
-        </script>
+          ${buttonHtml}
+          <script>
+            async function sendConfirmationRequest(confirmLink) {
+              try {
+                const response = await fetch(confirmLink)
+                console.log('Confirmation request sent:', response);
+              } catch (error) {
+                console.error('Error sending confirmation request:', error);
+              }
+            }
+          </script>
       </body>
     </html>
   `;
