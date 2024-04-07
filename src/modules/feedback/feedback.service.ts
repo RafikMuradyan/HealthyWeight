@@ -5,6 +5,11 @@ import { CreateFeedbackDto } from './dtos/create-feedback.dto';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from 'src/common/dtos';
 import { NotificationService } from '../notification/notification.service';
+import { IFeedbackNotification } from './interfaces';
+import {
+  FeedbackAlreadyConfirmedException,
+  FeedbackNotFoundException,
+} from './exceptions';
 
 @Injectable()
 export class FeedbackService {
@@ -16,21 +21,36 @@ export class FeedbackService {
 
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
     const createdFeedback = this.feedbackRepository.create(feedbackData);
-
     const feedback = await this.feedbackRepository.save(createdFeedback);
-    const { fullName, content, id } = feedback;
-    await this.notificationService.sendFeedbackNotification({
-      fullName,
-      content,
-      id,
-    });
+
+    const notificationData: IFeedbackNotification = {
+      id: feedback.id,
+      fullName: feedback.fullName,
+      content: feedback.content,
+    };
+
+    await this.notificationService.sendFeedbackNotification(notificationData);
 
     return feedback;
   }
 
-  // async confirmFeedback(feedbackId: number): Promise<boolean> {
-  //   return true;
-  // }
+  async confirmFeedback(feedbackId: number): Promise<Feedback> {
+    const existingFeedback = await this.feedbackRepository.findOneBy({
+      id: feedbackId,
+    });
+
+    if (!existingFeedback) {
+      throw new FeedbackNotFoundException();
+    }
+
+    if (existingFeedback.isConfirmed) {
+      throw new FeedbackAlreadyConfirmedException();
+    }
+
+    const updatedFeedback = { ...existingFeedback, isConfirmed: true };
+
+    return this.feedbackRepository.save(updatedFeedback);
+  }
 
   async findAllConfirmed(
     pageOptionsDto: PageOptionsDto,

@@ -1,13 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
-import * as jwt from 'jsonwebtoken';
-import * as fs from 'fs';
-import * as path from 'path';
-import { IFeedback, IFeedbackHTML, ITokenPayload } from './interfaces';
+import { IFeedbackHTML, ITokenPayload } from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
-import { InjectRepository } from '@nestjs/typeorm';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
+import { IFeedbackNotification } from '../feedback/interfaces';
 
 @Injectable()
 export class NotificationService {
@@ -16,14 +12,11 @@ export class NotificationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async sendFeedbackNotification(feedback: IFeedback) {
+  async sendFeedbackNotification(feedback: IFeedbackNotification) {
     try {
-      const payload: ITokenPayload = { feedbackId: feedback.id };
-      console.log(321);
-
-      const token = this.jwtService.generateToken(payload);
-
-      console.log(12);
+      const jwtPayload: ITokenPayload = { feedbackId: feedback.id };
+      const token = this.jwtService.generateToken(jwtPayload);
+      console.log(token);
 
       const BASE_API = process.env.BASE_API;
       if (!BASE_API) {
