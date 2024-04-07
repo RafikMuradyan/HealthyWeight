@@ -3,32 +3,48 @@ import * as nodemailer from 'nodemailer';
 import * as jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IFeedback, IFeedbackHTML } from './interfaces';
+import { IFeedback, IFeedbackHTML, ITokenPayload } from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmailService } from '../email/email.service';
+import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()
 export class NotificationService {
-  constructor(private readonly emailService: EmailService) {}
+  constructor(
+    private readonly emailService: EmailService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  private generateToken(feedbackId: number): string {
-    const token = jwt.sign({ feedbackId }, process.env.JWT_SECRET, {
-      expiresIn: '7d',
-    });
+  async sendFeedbackNotification(feedback: IFeedback) {
+    try {
+      const payload: ITokenPayload = { feedbackId: feedback.id };
+      console.log(321);
 
-    return token;
-  }
+      const token = this.jwtService.generateToken(payload);
 
-  private sendConfirmFeedbackEmail(feedbackId: number): void {
-    const BASE_API = process.env.BASE_API;
-    if (!BASE_API) {
-      throw new NotFoundException('Base api does not existed');
+      console.log(12);
+
+      const BASE_API = process.env.BASE_API;
+      if (!BASE_API) {
+        throw new NotFoundException('Base api does not existed');
+      }
+
+      const confirmLink = `${process.env.BASE_API}/feedback/confirm?token=${token}`;
+      const from = process.env.EMAIL_USER;
+      const to = process.env.RECIPIENT;
+      const subject = FEEDBACK_SUBJECT;
+      const html = this.createFeedbackHTMLBody({
+        fullName: feedback.fullName,
+        content: feedback.content,
+        url: confirmLink,
+      });
+
+      await this.emailService.sendEmail({ from, to, subject, html });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new Error('Failed to send email');
     }
-
-    const token = this.generateToken(feedbackId);
-    const confirmLink = `${BASE_API}/feedback/confirm?token=${token}`;
-    console.log(confirmLink);
   }
 
   private createFeedbackHTMLBody(feedback: IFeedbackHTML) {
@@ -66,27 +82,5 @@ export class NotificationService {
       </body>
     </html>
   `;
-  }
-
-  async sendFeedbackNotification(feedback: IFeedback) {
-    try {
-      const { fullName, content } = feedback;
-      const token = this.generateToken(feedback.id);
-
-      const confirmLink = `${process.env.BASE_API}/feedback/confirm?token=${token}`;
-      const from = process.env.EMAIL_USER;
-      const to = process.env.RECIPIENT;
-      const subject = FEEDBACK_SUBJECT;
-      const html = this.createFeedbackHTMLBody({
-        fullName,
-        content,
-        url: confirmLink,
-      });
-      console.log(confirmLink, 'confirmLinkconfirmLink');
-      await this.emailService.sendEmail({ from, to, subject, html });
-    } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
-    }
   }
 }

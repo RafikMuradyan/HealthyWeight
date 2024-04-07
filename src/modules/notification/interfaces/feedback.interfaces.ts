@@ -9,3 +9,7 @@ export interface IFeedbackHTML {
   fullName: string;
   url: string;
 }
+
+export interface ITokenPayload {
+  feedbackId: number;
+}

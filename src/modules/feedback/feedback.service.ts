@@ -28,9 +28,9 @@ export class FeedbackService {
     return feedback;
   }
 
-  async confirmFeedback(feedbackId: number): Promise<boolean> {
-    return true;
-  }
+  // async confirmFeedback(feedbackId: number): Promise<boolean> {
+  //   return true;
+  // }
 
   async findAllConfirmed(
     pageOptionsDto: PageOptionsDto,
