@@ -4,20 +4,28 @@ import { Repository } from 'typeorm';
 import { CreateFeedbackDto } from './dtos/create-feedback.dto';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from 'src/common/dtos';
-import { EmailService } from '../email/email.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class FeedbackService {
   constructor(
     @InjectRepository(Feedback)
     private readonly feedbackRepository: Repository<Feedback>,
-    private readonly emailService: EmailService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
     const createdFeedback = this.feedbackRepository.create(feedbackData);
 
-    return this.feedbackRepository.save(createdFeedback);
+    const feedback = await this.feedbackRepository.save(createdFeedback);
+    const { fullName, content, id } = feedback;
+    await this.notificationService.sendFeedbackNotification({
+      fullName,
+      content,
+      id,
+    });
+
+    return feedback;
   }
 
   async confirmFeedback(feedbackId: number): Promise<boolean> {

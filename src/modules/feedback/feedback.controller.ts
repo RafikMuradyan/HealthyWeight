@@ -52,8 +52,9 @@ export class FeedbackController {
     }
 
     try {
-      const decodedToken = jwt.verify(token, 'secret');
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       const feedbackId = decodedToken;
+      console.log(feedbackId, 'feedbackId>>>>>>>');
     } catch (error) {
       throw new BadRequestException('Invalid token');
     }
