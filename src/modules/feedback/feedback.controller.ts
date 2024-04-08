@@ -1,22 +1,16 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  NotFoundException,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FeedbackService } from './feedback.service';
-import { CreateFeedbackDto } from './dtos/create-feedback.dto';
+import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
-import { PageDto, PageOptionsDto } from 'src/common/dtos';
-import * as jwt from 'jsonwebtoken';
-import { IDecodedFeedbackToken } from './interfaces';
+import { PageDto, PageOptionsDto } from '../../common/dtos';
+import { TokenData } from '../jwt/decorators';
+import { IConfirmedResponse, ITokenPayload } from './interfaces';
+import {
+  ConfirmFeedbackDecorator,
+  CreateFeedback,
+  FindAllFeedbacks,
+} from './decorators';
 
 @ApiTags('Feedback')
 @Controller('feedback')
@@ -24,16 +18,14 @@ export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new feedback' })
+  @CreateFeedback()
   async create(@Body() feedbackData: CreateFeedbackDto): Promise<Feedback> {
     const createdFeedback = await this.feedbackService.create(feedbackData);
     return createdFeedback;
   }
 
   @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get list of feedbacks' })
+  @FindAllFeedbacks()
   async findAll(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Feedback>> {
@@ -44,22 +36,10 @@ export class FeedbackController {
   }
 
   @Get('confirm/:token')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Confirm feedback' })
-  async confirmFeedback(@Param('token') token: string): Promise<Feedback> {
-    if (!token) {
-      throw new NotFoundException('Token not found');
-    }
-
-    try {
-      const decodedToken = jwt.verify(
-        token,
-        process.env.JWT_SECRET,
-      ) as IDecodedFeedbackToken;
-      const feedbackId = decodedToken.feedbackId;
-      return this.feedbackService.confirmFeedback(feedbackId);
-    } catch (error) {
-      return error;
-    }
+  @ConfirmFeedbackDecorator()
+  async confirmFeedback(
+    @TokenData() tokenData: ITokenPayload,
+  ): Promise<IConfirmedResponse> {
+    return await this.feedbackService.confirmFeedback(tokenData.feedbackId);
   }
 }

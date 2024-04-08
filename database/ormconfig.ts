@@ -2,9 +2,9 @@ require('dotenv').config();
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AppRatings } from '../src/modules/app-ratings/app-ratings.entity';
 import { UserProfile } from '../src/modules/user-profile/user-profile.entity';
-import databaseConfigSchema from '../src/utils/joi/database-config.schema';
 import { Feedback } from 'src/modules/feedback/feedback.entity';
 import { FeedbackSubscriber } from 'src/modules/feedback/feedback.subscriber';
+import databaseConfigSchema from '../src/utils/joi/database-config.schema';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 
-export class FeedbackAlreadyConfirmedException extends ConflictException {
+export class FeedbackConfirmedException extends ConflictException {
   constructor(error?: string) {
-    super('Feedback alerady confirmed', error);
+    super('Feedback already confrmed', error);
   }
 }

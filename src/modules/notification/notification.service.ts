@@ -1,9 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IFeedbackHTML, ITokenPayload } from './interfaces';
+import {
+  IFeedbackNotification,
+  IFeedbackHTML,
+  ITokenPayload,
+} from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
-import { IFeedbackNotification } from '../feedback/interfaces';
+import { IEmailDetails } from '../email/interfaces';
+import { sendEmailSchema } from 'src/utils/joi';
+import { InvalidEmailCredentialsException } from '../email/exceptions';
+import { EmailNotReceivedException } from './exceptions';
 
 @Injectable()
 export class NotificationService {
@@ -12,35 +19,70 @@ export class NotificationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async sendFeedbackNotification(feedback: IFeedbackNotification) {
-    try {
-      const jwtPayload: ITokenPayload = { feedbackId: feedback.id };
-      const token = this.jwtService.generateToken(jwtPayload);
-      console.log(token);
+  async sendFeedbackNotification(
+    feedback: IFeedbackNotification,
+  ): Promise<void> {
+    const payload: ITokenPayload = { feedbackId: feedback.id };
+    const token = this.jwtService.generateToken(payload);
 
-      const BASE_API = process.env.BASE_API;
-      if (!BASE_API) {
-        throw new NotFoundException('Base api does not existed');
-      }
+    const html = this.createFeedbackHTMLBody({
+      fullName: feedback.fullName,
+      content: feedback.content,
+      token,
+    });
 
-      const confirmLink = `${process.env.BASE_API}/feedback/confirm?token=${token}`;
-      const from = process.env.EMAIL_USER;
-      const to = process.env.RECIPIENT;
-      const subject = FEEDBACK_SUBJECT;
-      const html = this.createFeedbackHTMLBody({
-        fullName: feedback.fullName,
-        content: feedback.content,
-        url: confirmLink,
-      });
+    const from = process.env.EMAIL_USER;
+    const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
+    const subject = FEEDBACK_SUBJECT;
 
-      await this.emailService.sendEmail({ from, to, subject, html });
-    } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
+    const sendEmailDatils: IEmailDetails = {
+      from,
+      to,
+      subject,
+      html,
+    };
+
+    const { error } = sendEmailSchema.validate(sendEmailDatils);
+    if (error) {
+      throw new InvalidEmailCredentialsException();
+    }
+
+    const isEmailAccepted = await this.emailService.sendEmail(sendEmailDatils);
+    if (!isEmailAccepted) {
+      throw new EmailNotReceivedException();
     }
   }
 
-  private createFeedbackHTMLBody(feedback: IFeedbackHTML) {
+  private createConfirmLink(token: string): string {
+    const BASE_API = process.env.BASE_API;
+    if (!BASE_API) {
+      throw new NotFoundException('Base api does not existed');
+    }
+
+    const confirmLink = `${process.env.BASE_API}/feedback/confirm/${token}`;
+    return confirmLink;
+  }
+
+  private createFeedbackHTMLBody(feedback: IFeedbackHTML): string {
+    console.log(feedback);
+    const confirmLink = this.createConfirmLink(feedback.token);
+    const buttonHtml = `
+      <button
+        type="button"
+        style="
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: #ffffff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        "
+        onclick="sendConfirmationRequest('${confirmLink}')"
+      >
+        Confirm Feedback
+      </button>
+    `;
+
     return `
     <html>
       <head>
@@ -66,12 +108,17 @@ export class NotificationService {
         <div class="container">
           <h1>Feedback from ${feedback.fullName}</h1>
           <p>${feedback.content}</p>
-           <button class="button" id='apiForm'>Confirm Feedback</button>
-        </div>
-        <script>
-         document.getElementById('apiForm').addEventListener('click', function() {
-        fetch(${feedback.url})
-        </script>
+          ${buttonHtml}
+          <script>
+            async function sendConfirmationRequest(confirmLink) {
+              try {
+                const response = await fetch(confirmLink)
+                console.log('Confirmation request sent:', response);
+              } catch (error) {
+                console.error('Error sending confirmation request:', error);
+              }
+            }
+          </script>
       </body>
     </html>
   `;

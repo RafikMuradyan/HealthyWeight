@@ -1,2 +1,2 @@
 export * from './token-payload.interface';
-export * from './feedback.interface';
+export * from './confirmed-response.interface';

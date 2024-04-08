@@ -1,6 +1,6 @@
 export interface IEmailDetails {
   from: string;
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
 }

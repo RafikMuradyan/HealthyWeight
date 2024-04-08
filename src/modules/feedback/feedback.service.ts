@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateFeedbackDto } from './dtos/create-feedback.dto';
+import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
-import { PageDto, PageMetaDto, PageOptionsDto } from 'src/common/dtos';
+import { PageDto, PageMetaDto, PageOptionsDto } from '../../common/dtos';
 import { NotificationService } from '../notification/notification.service';
-import { IFeedbackNotification } from './interfaces';
 import {
-  FeedbackAlreadyConfirmedException,
+  FeedbackConfirmedException,
   FeedbackNotFoundException,
 } from './exceptions';
+import { IConfirmedResponse } from './interfaces';
+import { confirmedMessage } from './constants';
+import { IFeedbackNotification } from '../notification/interfaces';
 
 @Injectable()
 export class FeedbackService {
@@ -21,35 +23,42 @@ export class FeedbackService {
 
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
     const createdFeedback = this.feedbackRepository.create(feedbackData);
-    const feedback = await this.feedbackRepository.save(createdFeedback);
+    const savedFeedback = await this.feedbackRepository.save(createdFeedback);
 
     const notificationData: IFeedbackNotification = {
-      id: feedback.id,
-      fullName: feedback.fullName,
-      content: feedback.content,
+      id: savedFeedback.id,
+      fullName: savedFeedback.fullName,
+      content: savedFeedback.content,
     };
-
     await this.notificationService.sendFeedbackNotification(notificationData);
 
-    return feedback;
+    return savedFeedback;
   }
 
-  async confirmFeedback(feedbackId: number): Promise<Feedback> {
-    const existingFeedback = await this.feedbackRepository.findOneBy({
-      id: feedbackId,
-    });
+  async confirmFeedback(feedbackId: number): Promise<IConfirmedResponse> {
+    const queryBuilder =
+      this.feedbackRepository.createQueryBuilder('feedbacks');
+    const existingFeedback = await queryBuilder
+      .where('id = :id', { id: feedbackId })
+      .getOne();
 
     if (!existingFeedback) {
       throw new FeedbackNotFoundException();
     }
 
     if (existingFeedback.isConfirmed) {
-      throw new FeedbackAlreadyConfirmedException();
+      throw new FeedbackConfirmedException();
     }
 
-    const updatedFeedback = { ...existingFeedback, isConfirmed: true };
+    this.feedbackRepository.merge(existingFeedback, { isConfirmed: true });
+    const updatedRaw = await this.feedbackRepository.save(existingFeedback);
 
-    return this.feedbackRepository.save(updatedFeedback);
+    const result: IConfirmedResponse = {
+      message: confirmedMessage,
+      confirmedFeedback: updatedRaw,
+    };
+
+    return result;
   }
 
   async findAllConfirmed(
@@ -59,6 +68,7 @@ export class FeedbackService {
       this.feedbackRepository.createQueryBuilder('feedbacks');
 
     queryBuilder
+      .where('feedbacks.isConfirmed = :isConfirmed', { isConfirmed: true })
       .orderBy('feedbacks.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
