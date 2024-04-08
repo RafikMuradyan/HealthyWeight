@@ -49,7 +49,6 @@ export class FeedbackController {
   async confirmFeedback(
     @TokenData() tokenData: ITokenPayload,
   ): Promise<IConfirmedResponse> {
-    console.log(tokenData.feedbackId);
     return await this.feedbackService.confirmFeedback(tokenData.feedbackId);
   }
 }

@@ -3,6 +3,9 @@ import { IFeedback, IFeedbackHTML, ITokenPayload } from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
+import { IEmailDetails } from '../email/interfaces';
+import { sendEmailSchema } from 'src/utils/joi';
+import { InvalidEmailCredentialsException } from '../email/exceptions';
 
 @Injectable()
 export class NotificationService {
@@ -12,27 +15,39 @@ export class NotificationService {
   ) {}
 
   async sendFeedbackNotification(feedback: IFeedback): Promise<void> {
+    const payload: ITokenPayload = { feedbackId: feedback.id };
+
+    const token = this.jwtService.generateToken(payload);
+
+    const BASE_API = process.env.BASE_API;
+    if (!BASE_API) {
+      throw new NotFoundException('Base api does not existed');
+    }
+
+    const confirmLink = `${process.env.BASE_API}/feedback/confirm/${token}`;
+    const from = process.env.EMAIL_USER;
+    const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
+    const subject = FEEDBACK_SUBJECT;
+    const html = this.createFeedbackHTMLBody({
+      fullName: feedback.fullName,
+      content: feedback.content,
+      url: confirmLink,
+    });
+    console.log(confirmLink, 'confirmLink1111111');
+
+    const sendEmailDatils: IEmailDetails = {
+      from,
+      to,
+      subject,
+      html,
+    };
+    const { error } = sendEmailSchema.validate(sendEmailDatils);
+    if (error) {
+      throw new InvalidEmailCredentialsException();
+    }
+
     try {
-      const payload: ITokenPayload = { feedbackId: feedback.id };
-
-      const token = this.jwtService.generateToken(payload);
-
-      const BASE_API = process.env.BASE_API;
-      if (!BASE_API) {
-        throw new NotFoundException('Base api does not existed');
-      }
-
-      const confirmLink = `${process.env.BASE_API}/feedback/confirm/${token}`;
-      const from = process.env.EMAIL_USER;
-      const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
-      const subject = FEEDBACK_SUBJECT;
-      const html = this.createFeedbackHTMLBody({
-        fullName: feedback.fullName,
-        content: feedback.content,
-        url: confirmLink,
-      });
-      console.log(confirmLink, 'confirmLink1111111');
-      await this.emailService.sendEmail({ from, to, subject, html });
+      await this.emailService.sendEmail(sendEmailDatils);
     } catch (error) {
       console.error('Error sending email:', error);
       throw new Error('Failed to send email');
