@@ -41,6 +41,7 @@ export class NotificationService {
       subject,
       html,
     };
+
     const { error } = sendEmailSchema.validate(sendEmailDatils);
     if (error) {
       throw new InvalidEmailCredentialsException();
