@@ -1,5 +1,10 @@
+export interface ISenderInfo {
+  address: string;
+  name: string;
+}
+
 export interface IEmailDetails {
-  from: string;
+  from: ISenderInfo;
   to: string | string[];
   subject: string;
   html: string;

@@ -7,7 +7,7 @@ import {
 import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
-import { IEmailDetails } from '../email/interfaces';
+import { IEmailDetails, ISenderInfo } from '../email/interfaces';
 import { sendEmailSchema } from 'src/utils/joi';
 import { InvalidEmailCredentialsException } from '../email/exceptions';
 import { EmailNotReceivedException } from './exceptions';
@@ -31,7 +31,10 @@ export class NotificationService {
       token,
     });
 
-    const from = process.env.EMAIL_USER;
+    const from: ISenderInfo = {
+      name: process.env.SENDER_NAME,
+      address: process.env.SENDER_EMAIL_ADDRESS,
+    };
     const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
     const subject = FEEDBACK_SUBJECT;
 
@@ -44,7 +47,7 @@ export class NotificationService {
 
     const { error } = sendEmailSchema.validate(sendEmailDatils);
     if (error) {
-      throw new InvalidEmailCredentialsException();
+      throw new InvalidEmailCredentialsException(error.message);
     }
 
     const isEmailAccepted = await this.emailService.sendEmail(sendEmailDatils);
@@ -67,21 +70,20 @@ export class NotificationService {
     console.log(feedback);
     const confirmLink = this.createConfirmLink(feedback.token);
     const buttonHtml = `
-      <button
-        type="button"
-        style="
-          padding: 10px 20px;
-          background-color: #007bff;
-          color: #ffffff;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        "
-        onclick="sendConfirmationRequest('${confirmLink}')"
-      >
-        Confirm Feedback
-      </button>
-    `;
+    <a
+    href="${confirmLink}"
+    target="_self"
+    style="
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+    "
+  >
+    Confirm Feedback
+  </a>`;
 
     return `
     <html>
@@ -109,16 +111,6 @@ export class NotificationService {
           <h1>Feedback from ${feedback.fullName}</h1>
           <p>${feedback.content}</p>
           ${buttonHtml}
-          <script>
-            async function sendConfirmationRequest(confirmLink) {
-              try {
-                const response = await fetch(confirmLink)
-                console.log('Confirmation request sent:', response);
-              } catch (error) {
-                console.error('Error sending confirmation request:', error);
-              }
-            }
-          </script>
       </body>
     </html>
   `;
