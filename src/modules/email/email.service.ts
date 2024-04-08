@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Transporter } from 'nodemailer';
 import { IEmailDetails } from './interfaces';
-import { createTransport } from '../../configs';
+import { getTransport } from '../../configs';
 
 @Injectable()
 export class EmailService {
-  async sendEmail(feedback: IEmailDetails): Promise<string> {
+  async sendEmail(feedback: IEmailDetails): Promise<boolean> {
     try {
-      const transporter: Transporter = createTransport();
+      const transporter: Transporter = getTransport();
 
       const mailOptions = {
         from: feedback.from,
@@ -17,9 +17,10 @@ export class EmailService {
       };
 
       const info = await transporter.sendMail(mailOptions);
-      return info.response;
+
+      const isAccepted = !!info.accepted?.length;
+      return isAccepted;
     } catch (error) {
-      console.error('Error sending email:', error);
       throw new Error('Failed to send email');
     }
   }

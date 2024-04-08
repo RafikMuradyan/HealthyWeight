@@ -10,6 +10,7 @@ import { JwtService } from '../jwt/jwt.service';
 import { IEmailDetails } from '../email/interfaces';
 import { sendEmailSchema } from 'src/utils/joi';
 import { InvalidEmailCredentialsException } from '../email/exceptions';
+import { EmailNotReceivedException } from './exceptions';
 
 @Injectable()
 export class NotificationService {
@@ -22,23 +23,17 @@ export class NotificationService {
     feedback: IFeedbackNotification,
   ): Promise<void> {
     const payload: ITokenPayload = { feedbackId: feedback.id };
-
     const token = this.jwtService.generateToken(payload);
 
-    const BASE_API = process.env.BASE_API;
-    if (!BASE_API) {
-      throw new NotFoundException('Base api does not existed');
-    }
-
-    const confirmLink = `${process.env.BASE_API}/feedback/confirm/${token}`;
-    const from = process.env.EMAIL_USER;
-    const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
-    const subject = FEEDBACK_SUBJECT;
     const html = this.createFeedbackHTMLBody({
       fullName: feedback.fullName,
       content: feedback.content,
-      url: confirmLink,
+      token,
     });
+
+    const from = process.env.EMAIL_USER;
+    const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
+    const subject = FEEDBACK_SUBJECT;
 
     const sendEmailDatils: IEmailDetails = {
       from,
@@ -52,18 +47,41 @@ export class NotificationService {
       throw new InvalidEmailCredentialsException();
     }
 
-    try {
-      await this.emailService.sendEmail(sendEmailDatils);
-    } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
+    const isEmailAccepted = await this.emailService.sendEmail(sendEmailDatils);
+    if (!isEmailAccepted) {
+      throw new EmailNotReceivedException();
     }
   }
 
+  private createConfirmLink(token: string): string {
+    const BASE_API = process.env.BASE_API;
+    if (!BASE_API) {
+      throw new NotFoundException('Base api does not existed');
+    }
+
+    const confirmLink = `${process.env.BASE_API}/feedback/confirm/${token}`;
+    return confirmLink;
+  }
+
   private createFeedbackHTMLBody(feedback: IFeedbackHTML): string {
+    console.log(feedback);
+    const confirmLink = this.createConfirmLink(feedback.token);
     const buttonHtml = `
-    <button type="button" style="padding: 10px 20px; background-color: #007bff; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" onclick="sendConfirmationRequest('${feedback.url}')">Confirm Feedback</button>
-  `;
+      <button
+        type="button"
+        style="
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: #ffffff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        "
+        onclick="sendConfirmationRequest('${confirmLink}')"
+      >
+        Confirm Feedback
+      </button>
+    `;
 
     return `
     <html>

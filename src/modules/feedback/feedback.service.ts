@@ -23,18 +23,16 @@ export class FeedbackService {
 
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
     const createdFeedback = this.feedbackRepository.create(feedbackData);
+    const savedFeedback = await this.feedbackRepository.save(createdFeedback);
 
-    const feedbackPromise = this.feedbackRepository.save(createdFeedback);
     const notificationData: IFeedbackNotification = {
-      id: createdFeedback.id,
-      fullName: createdFeedback.fullName,
-      content: createdFeedback.content,
+      id: savedFeedback.id,
+      fullName: savedFeedback.fullName,
+      content: savedFeedback.content,
     };
     await this.notificationService.sendFeedbackNotification(notificationData);
 
-    const feedback = await feedbackPromise;
-
-    return feedback;
+    return savedFeedback;
   }
 
   async confirmFeedback(feedbackId: number): Promise<IConfirmedResponse> {

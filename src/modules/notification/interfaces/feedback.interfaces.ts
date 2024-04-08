@@ -7,7 +7,7 @@ export interface IFeedbackNotification {
 export interface IFeedbackHTML {
   content: string;
   fullName: string;
-  url: string;
+  token: string;
 }
 
 export interface ITokenPayload {
