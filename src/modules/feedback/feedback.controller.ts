@@ -4,15 +4,18 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dtos/create-feedback.dto';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageOptionsDto } from '../../common/dtos';
+import { TokenData } from '../jwt/decorators';
+import { TokenInterceptor } from '../jwt/interceptors';
+import { IConfirmedResponse, ITokenPayload } from './interfaces';
 
 @ApiTags('Feedback')
 @Controller('feedback')
@@ -39,14 +42,14 @@ export class FeedbackController {
     return createdFeedback;
   }
 
-  @Get('confirm')
+  @Get('confirm/:token')
   @HttpCode(HttpStatus.OK)
+  @UseInterceptors(TokenInterceptor)
   @ApiOperation({ summary: 'Confirm feedback' })
-  async confirmFeedback(@Query('token') token: string): Promise<Feedback> {
-    if (!token) {
-      throw new NotFoundException('Token not found');
-    }
-
-    return await this.feedbackService.confirmFeedback(token);
+  async confirmFeedback(
+    @TokenData() tokenData: ITokenPayload,
+  ): Promise<IConfirmedResponse> {
+    console.log(tokenData.feedbackId);
+    return await this.feedbackService.confirmFeedback(tokenData.feedbackId);
   }
 }

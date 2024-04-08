@@ -22,7 +22,7 @@ export class NotificationService {
         throw new NotFoundException('Base api does not existed');
       }
 
-      const confirmLink = `${process.env.BASE_API}/feedback/confirm?token=${token}`;
+      const confirmLink = `${process.env.BASE_API}/feedback/confirm/${token}`;
       const from = process.env.EMAIL_USER;
       const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
       const subject = FEEDBACK_SUBJECT;
