@@ -1,6 +1,6 @@
 import { applyDecorators, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
-import { CreateFeedbackDto } from '../dtos/create-feedback.dto';
+import { CreateFeedbackDto } from '../dtos';
 
 export function CreateFeedback(): MethodDecorator {
   return applyDecorators(

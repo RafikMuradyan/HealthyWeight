@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FeedbackService } from './feedback.service';
-import { CreateFeedbackDto } from './dtos/create-feedback.dto';
+import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageOptionsDto } from '../../common/dtos';
 import { TokenData } from '../jwt/decorators';

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateFeedbackDto } from './dtos/create-feedback.dto';
+import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../common/dtos';
 import { NotificationService } from '../notification/notification.service';
