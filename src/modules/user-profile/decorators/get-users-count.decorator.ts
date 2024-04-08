@@ -1,10 +1,10 @@
 import { applyDecorators, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
-export function FindAllFeedbacks(): MethodDecorator {
+export function GetUsersCount(): MethodDecorator {
   return applyDecorators(
     HttpCode(HttpStatus.OK),
-    ApiOperation({ summary: 'Get paginated list of feedbacks' }),
-    ApiOkResponse({ description: 'Paginated list of feedbacks' }),
+    ApiOperation({ summary: 'Get count of all user profiles' }),
+    ApiOkResponse({ description: 'Count of all user profiles' }),
   );
 }

@@ -4,7 +4,7 @@ import {
   HttpStatus,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { TokenInterceptor } from 'src/modules/jwt/interceptors';
 
 export function ConfirmFeedbackDecorator(): MethodDecorator {
@@ -13,5 +13,6 @@ export function ConfirmFeedbackDecorator(): MethodDecorator {
     UseInterceptors(TokenInterceptor),
     ApiOperation({ summary: 'Confirm feedback' }),
     ApiParam({ name: 'token', description: 'Feedback token', required: true }),
+    ApiOkResponse({ description: 'Feedback confirmed successfully' }),
   );
 }

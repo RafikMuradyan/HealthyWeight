@@ -5,8 +5,6 @@ export function FindAllAppRating(): MethodDecorator {
   return applyDecorators(
     HttpCode(HttpStatus.OK),
     ApiOperation({ summary: 'Get all ratings' }),
-    ApiOkResponse({
-      description: 'List of rating',
-    }),
+    ApiOkResponse({ description: 'List of ratings' }),
   );
 }
