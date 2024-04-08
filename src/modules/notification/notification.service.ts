@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IFeedback, IFeedbackHTML, ITokenPayload } from './interfaces';
+import {
+  IFeedbackNotification,
+  IFeedbackHTML,
+  ITokenPayload,
+} from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
@@ -14,7 +18,9 @@ export class NotificationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async sendFeedbackNotification(feedback: IFeedback): Promise<void> {
+  async sendFeedbackNotification(
+    feedback: IFeedbackNotification,
+  ): Promise<void> {
     const payload: ITokenPayload = { feedbackId: feedback.id };
 
     const token = this.jwtService.generateToken(payload);
@@ -33,7 +39,6 @@ export class NotificationService {
       content: feedback.content,
       url: confirmLink,
     });
-    console.log(confirmLink, 'confirmLink1111111');
 
     const sendEmailDatils: IEmailDetails = {
       from,

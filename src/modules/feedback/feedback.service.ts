@@ -11,6 +11,7 @@ import {
 } from './exceptions';
 import { IConfirmedResponse } from './interfaces';
 import { confirmedMessage } from './constants';
+import { IFeedbackNotification } from '../notification/interfaces';
 
 @Injectable()
 export class FeedbackService {
@@ -23,13 +24,15 @@ export class FeedbackService {
   async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
     const createdFeedback = this.feedbackRepository.create(feedbackData);
 
-    const feedback = await this.feedbackRepository.save(createdFeedback);
-    const { fullName, content, id } = feedback;
-    await this.notificationService.sendFeedbackNotification({
-      fullName,
-      content,
-      id,
-    });
+    const feedbackPromise = this.feedbackRepository.save(createdFeedback);
+    const notificationData: IFeedbackNotification = {
+      id: createdFeedback.id,
+      fullName: createdFeedback.fullName,
+      content: createdFeedback.content,
+    };
+    await this.notificationService.sendFeedbackNotification(notificationData);
+
+    const feedback = await feedbackPromise;
 
     return feedback;
   }

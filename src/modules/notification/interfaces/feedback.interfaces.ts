@@ -1,4 +1,4 @@
-export interface IFeedback {
+export interface IFeedbackNotification {
   id: number;
   content: string;
   fullName: string;
