@@ -15,6 +15,7 @@ export class TokenInterceptor implements NestInterceptor {
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
+    /* eslint-disable @typescript-eslint/no-explicit-any */
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const token = request.params.token;
