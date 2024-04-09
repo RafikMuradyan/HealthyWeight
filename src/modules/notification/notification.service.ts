@@ -71,19 +71,18 @@ export class NotificationService {
     const confirmLink = this.createConfirmLink(feedback.token);
     const buttonHtml = `
     <a
-    href="${confirmLink}"
-    target="_self"
-    style="
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 5px;
-    "
-  >
-    Confirm Feedback
-  </a>`;
+      href="${confirmLink}"
+      style="
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+      "
+    >
+      Confirm Feedback
+    </a>`;
 
     return `
     <html>
