@@ -5,14 +5,15 @@ import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../common/dtos';
 import { NotificationService } from '../notification/notification.service';
-import {
-  FeedbackConfirmedException,
-  FeedbackNotFoundException,
-} from './exceptions';
-import { IConfirmedResponse } from './interfaces';
-import { confirmedMessage } from './constants';
+// import {
+//   FeedbackConfirmedException,
+//   FeedbackNotFoundException,
+// } from './exceptions';
+// import { IConfirmedResponse } from './interfaces';
+// import { confirmedMessage } from './constants';
 import { IFeedbackNotification } from '../notification/interfaces';
-import { FeedbackEnum } from './enums';
+import { feedbackStatusLookup } from './enums';
+import { IHTMLDetails } from './interfaces/html-details.interface';
 
 @Injectable()
 export class FeedbackService {
@@ -36,7 +37,7 @@ export class FeedbackService {
     return savedFeedback;
   }
 
-  private createHTMLBody = (message: string, color: string): string => {
+  private createHTMLBody = (htmlDetails: IHTMLDetails): string => {
     return `
     <body onload="window.close()">
     <style>
@@ -45,13 +46,13 @@ export class FeedbackService {
         }
         h2 {
             text-align: center;
-            color: ${color};
+            color: ${htmlDetails.color};
             font-weight: bolder;
             font-size: 40px;
             margin-top: 15%;
         }
     </style>
-      <h2>${message}</h2>
+      <h2>${htmlDetails.message}</h2>
     </body>
     `;
   };
@@ -64,24 +65,24 @@ export class FeedbackService {
       .getOne();
 
     if (!existingFeedback) {
-      this.createHTMLBody('Feedback does not exist', '#b61a1f');
+      return this.createHTMLBody(feedbackStatusLookup.NOT_FOUND);
       // throw new FeedbackNotFoundException();
     }
 
     if (existingFeedback.isConfirmed) {
-      return this.createHTMLBody('Feedback Is Already Confrmed', '#3b3bad');
+      return this.createHTMLBody(feedbackStatusLookup.ALREADY_CONFIRMED);
       // throw new FeedbackConfirmedException();
     }
 
     this.feedbackRepository.merge(existingFeedback, { isConfirmed: true });
-    const updatedRaw = await this.feedbackRepository.save(existingFeedback);
+    // const updatedRaw = await this.feedbackRepository.save(existingFeedback);
 
-    const result: IConfirmedResponse = {
-      message: confirmedMessage,
-      confirmedFeedback: updatedRaw,
-    };
+    // const result: IConfirmedResponse = {
+    //   message: confirmedMessage,
+    //   confirmedFeedback: updatedRaw,
+    // };
 
-    return this.createHTMLBody(FeedbackEnum.SUCCESS, '#23833a');
+    return this.createHTMLBody(feedbackStatusLookup.SUCCESS);
     // return result;
   }
 

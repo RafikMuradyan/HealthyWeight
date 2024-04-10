@@ -5,7 +5,7 @@ import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageOptionsDto } from '../../common/dtos';
 import { TokenData } from '../jwt/decorators';
-import { IConfirmedResponse, ITokenPayload } from './interfaces';
+import { ITokenPayload } from './interfaces';
 import {
   ConfirmFeedbackDecorator,
   CreateFeedback,
