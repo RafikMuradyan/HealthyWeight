@@ -39,7 +39,7 @@ export class FeedbackController {
   @ConfirmFeedbackDecorator()
   async confirmFeedback(
     @TokenData() tokenData: ITokenPayload,
-  ): Promise<IConfirmedResponse> {
+  ): Promise<string> {
     return await this.feedbackService.confirmFeedback(tokenData.feedbackId);
   }
 }

@@ -12,6 +12,7 @@ import {
 import { IConfirmedResponse } from './interfaces';
 import { confirmedMessage } from './constants';
 import { IFeedbackNotification } from '../notification/interfaces';
+import { FeedbackEnum } from './enums';
 
 @Injectable()
 export class FeedbackService {
@@ -35,7 +36,27 @@ export class FeedbackService {
     return savedFeedback;
   }
 
-  async confirmFeedback(feedbackId: number): Promise<IConfirmedResponse> {
+  private createHTMLBody = (message: string, color: string): string => {
+    return `
+    <body onload="window.close()">
+    <style>
+        body {
+            background-color: rgb(225 221 229);
+        }
+        h2 {
+            text-align: center;
+            color: ${color};
+            font-weight: bolder;
+            font-size: 40px;
+            margin-top: 15%;
+        }
+    </style>
+      <h2>${message}</h2>
+    </body>
+    `;
+  };
+
+  async confirmFeedback(feedbackId: number): Promise<string> {
     const queryBuilder =
       this.feedbackRepository.createQueryBuilder('feedbacks');
     const existingFeedback = await queryBuilder
@@ -43,11 +64,13 @@ export class FeedbackService {
       .getOne();
 
     if (!existingFeedback) {
-      throw new FeedbackNotFoundException();
+      this.createHTMLBody('Feedback does not exist', '#b61a1f');
+      // throw new FeedbackNotFoundException();
     }
 
     if (existingFeedback.isConfirmed) {
-      throw new FeedbackConfirmedException();
+      return this.createHTMLBody('Feedback Is Already Confrmed', '#3b3bad');
+      // throw new FeedbackConfirmedException();
     }
 
     this.feedbackRepository.merge(existingFeedback, { isConfirmed: true });
@@ -58,7 +81,8 @@ export class FeedbackService {
       confirmedFeedback: updatedRaw,
     };
 
-    return result;
+    return this.createHTMLBody(FeedbackEnum.SUCCESS, '#23833a');
+    // return result;
   }
 
   async findAllConfirmed(
