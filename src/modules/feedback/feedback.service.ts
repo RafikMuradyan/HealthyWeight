@@ -13,7 +13,7 @@ import { NotificationService } from '../notification/notification.service';
 // import { confirmedMessage } from './constants';
 import { IFeedbackNotification } from '../notification/interfaces';
 import { feedbackStatusLookup } from './enums';
-import { IHTMLDetails } from './interfaces/html-details.interface';
+import { IHTMLDetails } from './interfaces';
 
 @Injectable()
 export class FeedbackService {
