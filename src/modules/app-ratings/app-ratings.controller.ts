@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppRatingsService } from './app-ratings.service';
 import { AppRatings } from './app-ratings.entity';
 import { CreateAppRatingDto } from './dtos';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { IAppRatingsData } from './interfaces';
+import { CreateAppRating, FindAllAppRating } from './decorators';
 
 @ApiTags('App Ratings')
 @Controller('app-ratings')
@@ -20,9 +12,7 @@ export class AppRatingsController {
   constructor(private readonly appRatingsService: AppRatingsService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new rating' })
-  @UsePipes(new ValidationPipe())
+  @CreateAppRating()
   async createRating(
     @Body() appRatingData: CreateAppRatingDto,
   ): Promise<AppRatings> {
@@ -31,8 +21,7 @@ export class AppRatingsController {
   }
 
   @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all ratings' })
+  @FindAllAppRating()
   async findAll(): Promise<IAppRatingsData> {
     const appRatingsData = await this.appRatingsService.findAll();
     return appRatingsData;

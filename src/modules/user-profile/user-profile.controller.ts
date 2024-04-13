@@ -3,13 +3,9 @@ import {
   Get,
   Post,
   Body,
-  ValidationPipe,
   Param,
   ParseIntPipe,
   Put,
-  UsePipes,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 import { UserProfileService } from './user-profile.service';
 import { CreateUserProfileDto, PutWeightStatusDto } from './dtos';
@@ -17,25 +13,28 @@ import { UserProfile } from './user-profile.entity';
 import { IUserAnalytics } from './interfaces';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/interfaces';
 import { OrNeverType } from '../../utils/types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  CreateUserProfile,
+  GetAnalytics,
+  GetUsersCount,
+  PutWeightStatus,
+} from './decorators';
 
 @ApiTags('User Profile')
 @Controller('user-profile')
 export class UserProfileController {
   constructor(private readonly userProfileService: UserProfileService) {}
 
-  @ApiOperation({ summary: 'Get count of all user profiles' })
-  @HttpCode(HttpStatus.OK)
   @Get()
+  @GetUsersCount()
   async getCount(): Promise<number> {
     const userProfileCount = await this.userProfileService.getCount();
     return userProfileCount;
   }
 
-  @ApiOperation({ summary: 'Create new user profile' })
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe())
+  @CreateUserProfile()
   async create(
     @Body() userProfileData: CreateUserProfileDto,
   ): Promise<ICalculationResult> {
@@ -45,10 +44,8 @@ export class UserProfileController {
     return createdUserProfile;
   }
 
-  @ApiOperation({ summary: 'Put weight status in user profile' })
   @Put(':id')
-  @HttpCode(HttpStatus.ACCEPTED)
-  @UsePipes(new ValidationPipe())
+  @PutWeightStatus()
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,
@@ -60,9 +57,8 @@ export class UserProfileController {
     return updatedUserProfile;
   }
 
-  @ApiOperation({ summary: 'Get user profile analitycs' })
   @Get('analytics')
-  @HttpCode(HttpStatus.OK)
+  @GetAnalytics()
   async getAnalytics(): Promise<IUserAnalytics> {
     const analitycs = await this.userProfileService.getAnalytics();
 
