@@ -40,6 +40,8 @@ export class FeedbackController {
   async confirmFeedback(
     @TokenData() tokenData: ITokenPayload,
   ): Promise<string> {
-    return await this.feedbackService.confirmFeedback(tokenData.feedbackId);
+    return await this.feedbackService.confirmFeedbackForEmail(
+      tokenData.feedbackId,
+    );
   }
 }

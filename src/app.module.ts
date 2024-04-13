@@ -6,6 +6,7 @@ import { UserProfileModule } from './modules/user-profile/user-profile.module';
 import { dataSourceOptions } from '../database/ormconfig';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
+import { TelegramModule } from './modules/telegram/telegram.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     UserProfileModule,
     HealthCheckerModule,
     FeedbackModule,
+    TelegramModule,
   ],
   controllers: [],
   providers: [],

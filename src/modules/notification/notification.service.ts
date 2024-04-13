@@ -11,12 +11,14 @@ import { IEmailDetails, ISenderInfo } from '../email/interfaces';
 import { sendEmailSchema } from 'src/utils/joi';
 import { InvalidEmailCredentialsException } from '../email/exceptions';
 import { EmailNotReceivedException } from './exceptions';
+import { TelegramService } from '../telegram/telegram.service';
 
 @Injectable()
 export class NotificationService {
   constructor(
     private readonly emailService: EmailService,
     private readonly jwtService: JwtService,
+    private readonly telegramService: TelegramService,
   ) {}
 
   async sendFeedbackNotification(
@@ -24,7 +26,7 @@ export class NotificationService {
   ): Promise<void> {
     const payload: ITokenPayload = { feedbackId: feedback.id };
     const token = this.jwtService.generateToken(payload);
-
+    console.log(token);
     const html = this.createFeedbackHTMLBody({
       fullName: feedback.fullName,
       content: feedback.content,
@@ -54,6 +56,11 @@ export class NotificationService {
     if (!isEmailAccepted) {
       throw new EmailNotReceivedException();
     }
+
+    const isMessageAccepted =
+      await this.telegramService.sendConfirmationMessage(feedback);
+
+    console.log(isMessageAccepted);
   }
 
   private createConfirmLink(token: string): string {

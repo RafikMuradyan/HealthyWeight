@@ -6,8 +6,12 @@ import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../common/dtos';
 import { NotificationService } from '../notification/notification.service';
 import { IFeedbackNotification } from '../notification/interfaces';
-import { feedbackStatusLookup } from './enums';
+import { FeedbackStatus, feedbackStatusLookup } from './enums';
 import { IHTMLDetails } from './interfaces';
+import {
+  FeedbackAlreadyConfirmedException,
+  FeedbackNotFoundException,
+} from './exceptions';
 
 @Injectable()
 export class FeedbackService {
@@ -51,26 +55,64 @@ export class FeedbackService {
     `;
   };
 
-  async confirmFeedback(feedbackId: number): Promise<string> {
+  private async confirmFeedback(feedbackId: number): Promise<Feedback> {
     const queryBuilder =
       this.feedbackRepository.createQueryBuilder('feedbacks');
     const existingFeedback = await queryBuilder
       .where('id = :id', { id: feedbackId })
       .getOne();
 
-    console.log(existingFeedback);
     if (!existingFeedback) {
-      return this.createHTMLBody(feedbackStatusLookup.NOT_FOUND);
+      throw new FeedbackNotFoundException();
     }
 
     if (existingFeedback.isConfirmed) {
-      return this.createHTMLBody(feedbackStatusLookup.ALREADY_CONFIRMED);
+      throw new FeedbackAlreadyConfirmedException();
     }
 
     this.feedbackRepository.merge(existingFeedback, { isConfirmed: true });
-    await this.feedbackRepository.save(existingFeedback);
+    const confirmedFeedback = await this.feedbackRepository.save(
+      existingFeedback,
+    );
+    return confirmedFeedback;
+  }
 
-    return this.createHTMLBody(feedbackStatusLookup.SUCCESS);
+  async confirmFeedbackForEmail(feedbackId: number): Promise<string> {
+    try {
+      await this.confirmFeedback(feedbackId);
+      return this.createHTMLBody(feedbackStatusLookup.SUCCESS);
+    } catch (error) {
+      switch (error) {
+        case error instanceof FeedbackNotFoundException:
+          return this.createHTMLBody(feedbackStatusLookup.NOT_FOUND);
+
+        case error instanceof FeedbackAlreadyConfirmedException:
+          return this.createHTMLBody(feedbackStatusLookup.ALREADY_CONFIRMED);
+
+        default:
+          break;
+      }
+    }
+  }
+
+  async confirmFeedbackForTelegram(
+    feedbackId: number,
+  ): Promise<FeedbackStatus> {
+    try {
+      await this.confirmFeedback(feedbackId);
+      return FeedbackStatus.SUCCESS;
+    } catch (error) {
+      switch (error) {
+        case error instanceof FeedbackNotFoundException:
+          return FeedbackStatus.NOT_FOUND;
+
+        case error instanceof FeedbackAlreadyConfirmedException:
+          return FeedbackStatus.ALREADY_CONFIRMED;
+
+        default:
+          break;
+      }
+    }
   }
 
   async findAllConfirmed(
