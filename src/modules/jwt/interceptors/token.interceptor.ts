@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { JwtService } from 'src/modules/jwt/jwt.service';
+import { JwtService } from '../jwt.service';
 import { MissingFeedbackIdException } from '../exceptions';
 
 @Injectable()

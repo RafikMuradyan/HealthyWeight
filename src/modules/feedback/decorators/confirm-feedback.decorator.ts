@@ -5,7 +5,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { TokenInterceptor } from 'src/modules/jwt/interceptors';
+import { TokenInterceptor } from '../../jwt/interceptors';
 
 export function ConfirmFeedbackDecorator(): MethodDecorator {
   return applyDecorators(

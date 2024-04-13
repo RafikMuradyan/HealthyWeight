@@ -8,7 +8,7 @@ import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
 import { IEmailDetails, ISenderInfo } from '../email/interfaces';
-import { sendEmailSchema } from 'src/utils/joi';
+import { sendEmailSchema } from '../../utils/joi';
 import { InvalidEmailCredentialsException } from '../email/exceptions';
 import { EmailNotReceivedException } from './exceptions';
 
