@@ -22,7 +22,7 @@ ENV PORT $PORT
 EXPOSE $PORT
 
 # Set the entry point command to start the application in development mode
-ENTRYPOINT ["npm", "run", "start:dev"]
+# ENTRYPOINT ["npm", "run", "start:dev"]
 
 # Run migrations when the container starts
 CMD [ "npm run migration:run" ]

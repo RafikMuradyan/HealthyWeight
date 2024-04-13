@@ -5,12 +5,6 @@ import { CreateFeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../common/dtos';
 import { NotificationService } from '../notification/notification.service';
-// import {
-//   FeedbackConfirmedException,
-//   FeedbackNotFoundException,
-// } from './exceptions';
-// import { IConfirmedResponse } from './interfaces';
-// import { confirmedMessage } from './constants';
 import { IFeedbackNotification } from '../notification/interfaces';
 import { feedbackStatusLookup } from './enums';
 import { IHTMLDetails } from './interfaces';
@@ -64,26 +58,19 @@ export class FeedbackService {
       .where('id = :id', { id: feedbackId })
       .getOne();
 
+    console.log(existingFeedback);
     if (!existingFeedback) {
       return this.createHTMLBody(feedbackStatusLookup.NOT_FOUND);
-      // throw new FeedbackNotFoundException();
     }
 
     if (existingFeedback.isConfirmed) {
       return this.createHTMLBody(feedbackStatusLookup.ALREADY_CONFIRMED);
-      // throw new FeedbackConfirmedException();
     }
 
     this.feedbackRepository.merge(existingFeedback, { isConfirmed: true });
-    // const updatedRaw = await this.feedbackRepository.save(existingFeedback);
-
-    // const result: IConfirmedResponse = {
-    //   message: confirmedMessage,
-    //   confirmedFeedback: updatedRaw,
-    // };
+    await this.feedbackRepository.save(existingFeedback);
 
     return this.createHTMLBody(feedbackStatusLookup.SUCCESS);
-    // return result;
   }
 
   async findAllConfirmed(
