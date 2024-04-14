@@ -1,24 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  IFeedbackNotification,
-  IFeedbackHTML,
-  ITokenPayload,
-} from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
 import { IEmailDetails, ISenderInfo } from '../email/interfaces';
 import { sendEmailSchema } from 'src/utils/joi';
 import { InvalidEmailCredentialsException } from '../email/exceptions';
-import { EmailNotReceivedException } from './exceptions';
-import { TelegramService } from '../telegram/telegram.service';
+import { TelegramSenderService } from '../telegram/telegram-sender/telegram-sender.service';
+import {
+  IFeedbackNotification,
+  IFeedbackHTML,
+  ITokenPayload,
+} from './interfaces';
+import {
+  EmailNotReceivedException,
+  MessageNotReceivedException,
+} from './exceptions';
 
 @Injectable()
 export class NotificationService {
   constructor(
     private readonly emailService: EmailService,
     private readonly jwtService: JwtService,
-    private readonly telegramService: TelegramService,
+    private readonly telegramSenderService: TelegramSenderService,
   ) {}
 
   async sendFeedbackNotification(
@@ -58,9 +61,10 @@ export class NotificationService {
     }
 
     const isMessageAccepted =
-      await this.telegramService.sendConfirmationMessage(feedback);
-
-    console.log(isMessageAccepted);
+      await this.telegramSenderService.sendConfirmationMessage(feedback);
+    if (!isMessageAccepted) {
+      throw new MessageNotReceivedException();
+    }
   }
 
   private createConfirmLink(token: string): string {

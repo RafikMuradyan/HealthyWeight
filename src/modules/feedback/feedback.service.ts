@@ -82,7 +82,7 @@ export class FeedbackService {
       await this.confirmFeedback(feedbackId);
       return this.createHTMLBody(feedbackStatusLookup.SUCCESS);
     } catch (error) {
-      switch (error) {
+      switch (true) {
         case error instanceof FeedbackNotFoundException:
           return this.createHTMLBody(feedbackStatusLookup.NOT_FOUND);
 
@@ -102,7 +102,7 @@ export class FeedbackService {
       await this.confirmFeedback(feedbackId);
       return FeedbackStatus.SUCCESS;
     } catch (error) {
-      switch (error) {
+      switch (true) {
         case error instanceof FeedbackNotFoundException:
           return FeedbackStatus.NOT_FOUND;
 
