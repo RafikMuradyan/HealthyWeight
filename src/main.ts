@@ -5,10 +5,6 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { buildSwagger } from './configs';
 import { ValidationPipe } from '@nestjs/common';
-import { Telegraf } from 'telegraf';
-
-export const telegramBot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-
 // const { loadEnvFile } = require('node:process');
 
 async function bootstrap(): Promise<NestExpressApplication> {
