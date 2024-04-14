@@ -29,7 +29,6 @@ export class NotificationService {
   ): Promise<void> {
     const payload: ITokenPayload = { feedbackId: feedback.id };
     const token = this.jwtService.generateToken(payload);
-    console.log(token);
     const html = this.createFeedbackHTMLBody({
       fullName: feedback.fullName,
       content: feedback.content,
@@ -78,7 +77,6 @@ export class NotificationService {
   }
 
   private createFeedbackHTMLBody(feedback: IFeedbackHTML): string {
-    console.log(feedback);
     const confirmLink = this.createConfirmLink(feedback.token);
     const buttonHtml = `
     <a

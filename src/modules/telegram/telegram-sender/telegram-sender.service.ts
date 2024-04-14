@@ -31,14 +31,10 @@ export class TelegramSenderService {
 
       const message = this.generateMessage(feedback);
       for (const admin of this.admins) {
-        console.log(admin);
-        if (!admin) {
-          console.log('alooooo');
-          await this.bot.telegram.sendMessage(admin, message, {
-            reply_markup: keyboard,
-            parse_mode: 'MarkdownV2',
-          });
-        }
+        await this.bot.telegram.sendMessage(admin, message, {
+          reply_markup: keyboard,
+          parse_mode: 'MarkdownV2',
+        });
       }
 
       return true;
