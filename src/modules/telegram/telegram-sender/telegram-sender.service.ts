@@ -39,6 +39,7 @@ export class TelegramSenderService {
 
       return true;
     } catch (error) {
+      console.log(error);
       throw new MessageSendException();
     }
   }

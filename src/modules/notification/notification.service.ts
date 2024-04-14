@@ -39,7 +39,7 @@ export class NotificationService {
       name: process.env.SENDER_NAME,
       address: process.env.SENDER_EMAIL_ADDRESS,
     };
-    const to = [process.env.RECIPIENT1, process.env.RECIPIENT2];
+    const to = [process.env.RECIPIENT1, process.env.RECIPIENT2].filter(Boolean);
     const subject = FEEDBACK_SUBJECT;
 
     const sendEmailDatils: IEmailDetails = {
