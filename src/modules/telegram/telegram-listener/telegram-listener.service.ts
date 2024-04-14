@@ -43,7 +43,10 @@ export class TelegramListenerService {
           break;
 
         case FeedbackStatus.SUCCESS:
-          await ctx.answerCbQuery(`Feedback confirmed successfully 🎉`);
+          await this.bot.telegram.sendMessage(
+            chatId,
+            `Feedback confirmed successfully 🎉`,
+          );
           break;
 
         default:
