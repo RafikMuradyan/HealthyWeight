@@ -59,11 +59,12 @@ export class NotificationService {
       throw new EmailNotReceivedException();
     }
 
-    const isMessageAccepted =
-      await this.telegramSenderService.sendConfirmationMessage(feedback);
-    if (!isMessageAccepted) {
-      throw new MessageNotReceivedException();
-    }
+    // todo, fix problem with telegram bot
+    // const isMessageAccepted =
+    //   await this.telegramSenderService.sendConfirmationMessage(feedback);
+    // if (!isMessageAccepted) {
+    //   throw new MessageNotReceivedException();
+    // }
   }
 
   private createConfirmLink(token: string): string {
