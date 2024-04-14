@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Telegraf } from 'telegraf';
 import { IFeedbackNotification } from '../../notification/interfaces';
-import { telegramAdmins, telegramBot } from 'src/configs';
+import { telegramAdmins } from 'src/configs';
 import { MessageSendException } from '../exceptions';
+import telegramBot from 'src/main';
 
 @Injectable()
 export class TelegramSenderService {

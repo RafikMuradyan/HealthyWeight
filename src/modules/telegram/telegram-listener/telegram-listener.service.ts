@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Telegraf } from 'telegraf';
 import { SenderIsNotAdminException } from './../exceptions';
-import { telegramAdmins, telegramBot } from 'src/configs';
+import { telegramAdmins } from 'src/configs';
 import { FeedbackService } from 'src/modules/feedback/feedback.service';
 import { FeedbackStatus } from 'src/modules/feedback/enums';
+import telegramBot from 'src/main';
 
 @Injectable()
 export class TelegramListenerService {
