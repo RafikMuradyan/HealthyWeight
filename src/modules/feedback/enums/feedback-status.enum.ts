@@ -13,9 +13,9 @@ export enum Colors {
 }
 
 export enum Messages {
-  ALREADY_CONFIRMED = 'Feedback Is Already Confrmed',
+  ALREADY_CONFIRMED = 'Feedback already has been confrmed',
   NOT_FOUND = 'Feedback does not exist',
-  SUCCESS = 'Feedback Is Confrmed!',
+  SUCCESS = 'Feedback is confrmed!',
 }
 
 export const feedbackStatusLookup: FeedbackStatusLookup = {

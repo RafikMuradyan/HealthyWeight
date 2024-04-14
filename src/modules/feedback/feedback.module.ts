@@ -14,5 +14,6 @@ import { JwtModule } from '../jwt/jwt.module';
   ],
   providers: [FeedbackService],
   controllers: [FeedbackController],
+  exports: [FeedbackService],
 })
 export class FeedbackModule {}

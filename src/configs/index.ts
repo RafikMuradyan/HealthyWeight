@@ -1,2 +1,3 @@
-export * from './swagger.config';
+export * from './swagger.setup';
 export * from './nodemailer.setup';
+export * from './telegram.setup';

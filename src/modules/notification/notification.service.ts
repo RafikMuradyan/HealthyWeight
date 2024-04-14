@@ -1,22 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  IFeedbackNotification,
-  IFeedbackHTML,
-  ITokenPayload,
-} from './interfaces';
 import { FEEDBACK_SUBJECT } from './constants';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '../jwt/jwt.service';
 import { IEmailDetails, ISenderInfo } from '../email/interfaces';
 import { sendEmailSchema } from '../../utils/joi';
 import { InvalidEmailCredentialsException } from '../email/exceptions';
-import { EmailNotReceivedException } from './exceptions';
+import { TelegramSenderService } from '../telegram/telegram-sender/telegram-sender.service';
+import {
+  IFeedbackNotification,
+  IFeedbackHTML,
+  ITokenPayload,
+} from './interfaces';
+import {
+  EmailNotReceivedException,
+  MessageNotReceivedException,
+} from './exceptions';
 
 @Injectable()
 export class NotificationService {
   constructor(
     private readonly emailService: EmailService,
     private readonly jwtService: JwtService,
+    private readonly telegramSenderService: TelegramSenderService,
   ) {}
 
   async sendFeedbackNotification(
@@ -24,7 +29,6 @@ export class NotificationService {
   ): Promise<void> {
     const payload: ITokenPayload = { feedbackId: feedback.id };
     const token = this.jwtService.generateToken(payload);
-
     const html = this.createFeedbackHTMLBody({
       fullName: feedback.fullName,
       content: feedback.content,
@@ -54,6 +58,12 @@ export class NotificationService {
     if (!isEmailAccepted) {
       throw new EmailNotReceivedException();
     }
+
+    const isMessageAccepted =
+      await this.telegramSenderService.sendConfirmationMessage(feedback);
+    if (!isMessageAccepted) {
+      throw new MessageNotReceivedException();
+    }
   }
 
   private createConfirmLink(token: string): string {
@@ -67,7 +77,6 @@ export class NotificationService {
   }
 
   private createFeedbackHTMLBody(feedback: IFeedbackHTML): string {
-    console.log(feedback);
     const confirmLink = this.createConfirmLink(feedback.token);
     const buttonHtml = `
     <a

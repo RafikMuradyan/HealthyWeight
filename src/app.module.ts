@@ -6,6 +6,8 @@ import { UserProfileModule } from './modules/user-profile/user-profile.module';
 import { dataSourceOptions } from '../database/ormconfig';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
+import { TelegramSenderModule } from './modules/telegram/telegram-sender/telegram-sender.module';
+import { TelegramListenerModule } from './modules/telegram/telegram-listener/telegram-listener.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     UserProfileModule,
     HealthCheckerModule,
     FeedbackModule,
+    TelegramSenderModule,
+    TelegramListenerModule,
   ],
   controllers: [],
   providers: [],
