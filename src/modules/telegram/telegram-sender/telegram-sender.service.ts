@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Telegraf } from 'telegraf';
 import { IFeedbackNotification } from '../../notification/interfaces';
-import { telegramAdmins } from 'src/configs';
+import { telegramAdmins, telegramBot } from 'src/configs';
 import { MessageSendException } from '../exceptions';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class TelegramSenderService {
   private admins: Array<string>;
 
   constructor() {
-    this.bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+    this.bot = telegramBot;
     this.admins = telegramAdmins;
   }
 

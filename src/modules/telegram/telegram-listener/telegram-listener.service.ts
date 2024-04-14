@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Telegraf } from 'telegraf';
 import { SenderIsNotAdminException } from './../exceptions';
-import { telegramAdmins } from 'src/configs';
+import { telegramAdmins, telegramBot } from 'src/configs';
 import { FeedbackService } from 'src/modules/feedback/feedback.service';
 import { FeedbackStatus } from 'src/modules/feedback/enums';
 
@@ -11,7 +11,7 @@ export class TelegramListenerService {
   private admins: Array<string>;
 
   constructor(private readonly feedbackService: FeedbackService) {
-    this.bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+    this.bot = telegramBot;
     this.handleCallbackQuery();
     this.bot.launch();
     this.admins = telegramAdmins;
