@@ -8,8 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserProfileService } from './user-profile.service';
-import { CreateUserProfileDto, PutWeightStatusDto } from './dtos';
-import { UserProfile } from './user-profile.entity';
+import {
+  CreateUserProfileDto,
+  PutWeightStatusDto,
+  UserProfileDto,
+} from './dtos';
 import { IUserAnalytics } from './interfaces';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/interfaces';
 import { OrNeverType } from '../../utils/types';
@@ -49,7 +52,7 @@ export class UserProfileController {
   async putWeightStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserProfileDto: PutWeightStatusDto,
-  ): Promise<OrNeverType<UserProfile>> {
+  ): Promise<OrNeverType<UserProfileDto>> {
     const updatedUserProfile = await this.userProfileService.putWeightStatus(
       id,
       updateUserProfileDto,

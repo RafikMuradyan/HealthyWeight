@@ -17,7 +17,7 @@ export const dataSourceOptions: DataSourceOptions = {
     process.env.NODE_ENV === 'production'
       ? { rejectUnauthorized: false }
       : undefined,
-  synchronize: true,
+  synchronize: false,
   entities: [AppRatings, UserProfile, Feedback],
   migrations: ['dist/database/migrations/*.js'],
   subscribers: [FeedbackSubscriber],
