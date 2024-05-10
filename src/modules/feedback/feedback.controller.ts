@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FeedbackService } from './feedback.service';
-import { CreateFeedbackDto } from './dtos';
-import { Feedback } from './feedback.entity';
+import { CreateFeedbackDto, FeedbackDto } from './dtos';
 import { PageDto, PageOptionsDto } from '../../common/dtos';
 import { TokenData } from '../jwt/decorators';
 import { ITokenPayload } from './interfaces';
@@ -19,7 +18,7 @@ export class FeedbackController {
 
   @Post()
   @CreateFeedback()
-  async create(@Body() feedbackData: CreateFeedbackDto): Promise<Feedback> {
+  async create(@Body() feedbackData: CreateFeedbackDto): Promise<FeedbackDto> {
     const createdFeedback = await this.feedbackService.create(feedbackData);
     return createdFeedback;
   }
@@ -28,7 +27,7 @@ export class FeedbackController {
   @FindAllFeedbacks()
   async findAll(
     @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<Feedback>> {
+  ): Promise<PageDto<FeedbackDto>> {
     const createdFeedback = await this.feedbackService.findAllConfirmed(
       pageOptionsDto,
     );

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateFeedbackDto } from './dtos';
+import { CreateFeedbackDto, FeedbackDto } from './dtos';
 import { Feedback } from './feedback.entity';
 import { PageDto, PageMetaDto, PageOptionsDto } from '../../common/dtos';
 import { NotificationService } from '../notification/notification.service';
@@ -21,7 +21,7 @@ export class FeedbackService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  async create(feedbackData: CreateFeedbackDto): Promise<Feedback> {
+  async create(feedbackData: CreateFeedbackDto): Promise<FeedbackDto> {
     const createdFeedback = this.feedbackRepository.create(feedbackData);
     const savedFeedback = await this.feedbackRepository.save(createdFeedback);
 
@@ -31,8 +31,9 @@ export class FeedbackService {
       content: savedFeedback.content,
     };
     await this.notificationService.sendFeedbackNotification(notificationData);
+    const feedbackDto = new FeedbackDto(savedFeedback);
 
-    return savedFeedback;
+    return feedbackDto;
   }
 
   private createHTMLBody = (htmlDetails: IHTMLDetails): string => {
@@ -117,7 +118,7 @@ export class FeedbackService {
 
   async findAllConfirmed(
     pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<Feedback>> {
+  ): Promise<PageDto<FeedbackDto>> {
     const queryBuilder =
       this.feedbackRepository.createQueryBuilder('feedbacks');
 
@@ -129,9 +130,9 @@ export class FeedbackService {
 
     const totalCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
-
+    const feedbackDtos = entities.map((feedback) => new FeedbackDto(feedback));
     const pageMetaDto = new PageMetaDto({ totalCount, pageOptionsDto });
 
-    return new PageDto(entities, pageMetaDto);
+    return new PageDto(feedbackDtos, pageMetaDto);
   }
 }
