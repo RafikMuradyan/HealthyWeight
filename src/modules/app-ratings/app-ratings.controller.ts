@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppRatingsService } from './app-ratings.service';
-import { AppRatingDto, CreateAppRatingDto } from './dtos';
+import { AppRatings } from './app-ratings.entity';
+import { CreateAppRatingDto } from './dtos';
 import { ApiTags } from '@nestjs/swagger';
 import { IAppRatingsData } from './interfaces';
 import { CreateAppRating, FindAllAppRating } from './decorators';
@@ -14,7 +15,7 @@ export class AppRatingsController {
   @CreateAppRating()
   async createRating(
     @Body() appRatingData: CreateAppRatingDto,
-  ): Promise<AppRatingDto> {
+  ): Promise<AppRatings> {
     const createdRatig = await this.appRatingsService.create(appRatingData);
     return createdRatig;
   }

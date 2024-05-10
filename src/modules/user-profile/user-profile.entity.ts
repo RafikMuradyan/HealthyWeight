@@ -11,7 +11,7 @@ export class UserProfile extends AbstractEntity {
   height: number;
 
   @Column({ type: 'enum', enum: Gender })
-  gender: Gender;
+  gender: string;
 
   @Column({ type: 'enum', enum: WeightStatus })
   weightStatus: WeightStatus;
