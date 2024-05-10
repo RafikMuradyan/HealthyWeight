@@ -13,7 +13,7 @@ import {
 } from './interfaces';
 import {
   EmailNotReceivedException,
-  // MessageNotReceivedException,
+  MessageNotReceivedException,
 } from './exceptions';
 
 @Injectable()

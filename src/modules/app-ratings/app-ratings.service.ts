@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppRatings } from './app-ratings.entity';
-import { AppRatingDto, CreateAppRatingDto } from './dtos';
+import { CreateAppRatingDto } from './dtos';
 import { IAppRatingsData } from './interfaces';
 
 @Injectable()
@@ -15,12 +15,11 @@ export class AppRatingsService {
   async findAll(): Promise<IAppRatingsData> {
     const appRatingsQuery = this.appRatingsRepository.createQueryBuilder();
     const [ratings, count] = await appRatingsQuery.getManyAndCount();
-    const appRatingsDtos = ratings.map((rating) => new AppRatingDto(rating));
 
-    return { ratings: appRatingsDtos, count };
+    return { ratings, count };
   }
 
-  async create(appRatingData: CreateAppRatingDto): Promise<AppRatingDto> {
+  async create(appRatingData: CreateAppRatingDto): Promise<AppRatings> {
     const appRatingsQuery = this.appRatingsRepository.createQueryBuilder();
     const createdRow = await appRatingsQuery
       .insert()
@@ -28,8 +27,6 @@ export class AppRatingsService {
       .returning('*')
       .execute();
 
-    const appRatingDto = new AppRatingDto(createdRow.raw);
-
-    return appRatingDto;
+    return createdRow.raw;
   }
 }
