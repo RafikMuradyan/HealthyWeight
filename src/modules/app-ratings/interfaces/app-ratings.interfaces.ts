@@ -1,6 +1,6 @@
-import { AppRatingDto } from '../dtos';
+import { AppRatings } from '../app-ratings.entity';
 
 export interface IAppRatingsData {
-  ratings: AppRatingDto[];
+  ratings: AppRatings[];
   count: number;
 }

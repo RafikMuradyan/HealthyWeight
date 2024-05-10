@@ -1,12 +1,8 @@
-import {
-  CreateUserProfileDto,
-  PutWeightStatusDto,
-  UserProfileDto,
-} from './dtos';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from './user-profile.entity';
+import { CreateUserProfileDto, PutWeightStatusDto } from './dtos';
 import { IUserAnalytics } from './interfaces';
 import { CalculateIdealWeight } from '../../utils/calculate-ideal-weight/calculate-ideal-weight.service';
 import { ICalculationResult } from '../../utils/calculate-ideal-weight/interfaces';
@@ -98,7 +94,7 @@ export class UserProfileService {
   async putWeightStatus(
     id: number,
     weightStatusData: PutWeightStatusDto,
-  ): Promise<OrNeverType<UserProfileDto>> {
+  ): Promise<OrNeverType<UserProfile>> {
     const userProfileQuery = this.userProfileRepository.createQueryBuilder();
     const existingProfile = await userProfileQuery
       .where('id = :id', { id })
@@ -109,8 +105,7 @@ export class UserProfileService {
     }
     this.userProfileRepository.merge(existingProfile, weightStatusData);
     const updatedRaw = await this.userProfileRepository.save(existingProfile);
-    const userProfileDto = new UserProfileDto(updatedRaw);
 
-    return userProfileDto;
+    return updatedRaw;
   }
 }
